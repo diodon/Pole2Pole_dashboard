@@ -1,0 +1,13 @@
+ScientificName	AphiaID	Match type	LSID	ScientificName	AphiaID_accepted	ScientificName_accepted
+Mytilus edulis platensis	718572	exact	urn:lsid:marinespecies.org:taxname:718572	Mytilus edulis platensis	506158	Mytilus platensis
+Siphonaria lessoni	533427	phonetic	urn:lsid:marinespecies.org:taxname:533427	Siphonaria lessonii	533427	Siphonaria lessonii
+Aulacomya atra	505963	exact	urn:lsid:marinespecies.org:taxname:505963	Aulacomya atra	505963	Aulacomya atra
+Tegula patagonica	533470	exact	urn:lsid:marinespecies.org:taxname:533470	Tegula patagonica	533470	Tegula patagonica
+Trophon geversianus	197512	exact	urn:lsid:marinespecies.org:taxname:197512	Trophon geversianus	197512	Trophon geversianus
+Plaxiphora aurata aurata	817224	exact	urn:lsid:marinespecies.org:taxname:817224	Plaxiphora aurata aurata	386380	Plaxiphora (Plaxiphora) aurata
+Cyrtograpsus altimanus	444763	exact	urn:lsid:marinespecies.org:taxname:444763	Cyrtograpsus altimanus	444763	Cyrtograpsus altimanus
+Exosphaeroma sp.	118429	exact	urn:lsid:marinespecies.org:taxname:118429	Exosphaeroma	118429	Exosphaeroma
+Epitonium fabrizioi	458075	exact	urn:lsid:marinespecies.org:taxname:458075	Epitonium fabrizioi	458075	Epitonium fabrizioi
+Diadumene sp.	100728	exact	urn:lsid:marinespecies.org:taxname:100728	Diadumene	100728	Diadumene
+Fissurella radiosa tixierae	533644	exact	urn:lsid:marinespecies.org:taxname:533644	Fissurella radiosa tixierae	533644	Fissurella radiosa tixierae
+Eulalia clavigera	155375	exact	urn:lsid:marinespecies.org:taxname:155375	Eulalia clavigera	155375	Eulalia clavigera
