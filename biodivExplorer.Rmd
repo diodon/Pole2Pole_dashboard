@@ -3,7 +3,6 @@ title: "P2P Rockyshore Biodiversity Explorer"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
-    vertical_layout: fill
 ---
 
 ```{r setup, include=FALSE}
@@ -38,7 +37,7 @@ Occurrence$strata = factor(Occurrence$strata, levels = c("lowtide", "midtide", "
 General Information
 ======================================================================
 
-Row
+Column
 -----------------------------------------------------------------------
 
 ### Locality: `r siteDF$locality[1]` 
@@ -123,7 +122,7 @@ ggplotly(pp) %>% plotly::config(displayModeBar = F)
 ```
 
 
-Row
+Column
 -----------------------------------------------------------------------
 
 
@@ -195,6 +194,7 @@ knitr::kable(taxaTable)
 Indicators
 =======================================================
 
+
 Row
 -------------------------------------------------------
 
@@ -226,7 +226,7 @@ gauge(brachiCover$cover[brachiCover$strata=="lowtide"], min=0, max=100, symbol="
 
 
 Row
--------------------------------------------------------
+---------------------------------------------------------------
 
 ### Cluster by Sites
 
@@ -248,22 +248,29 @@ plot(hclust(ecoMat.dist), hang=-1, labels = paste0(ecoMat$site, "-", ecoMat$stra
 ```
 
 
-### Species accumulation curves
+Row 
+----------------------------------------------------------------
+
+### High tide
 
 
 ```{r}
+## filter by strata
+Occurrence.strata = Occurrence %>% filter(strata=="hightide", !is.na(AphiaID))
 
 ## do it by site
-siteNames = unique(Occurrence$site)
+siteNames = unique(Occurrence.strata$site)
 
 ## empty DF for results
-sppAccum = data.frame(site = character(), 
+sppAccum = data.frame(site = character(),
+                      strata = character(),
                       ncuad = numeric(),
                       richness = numeric(), 
                       sd = numeric())
 
 for (i in 1:length(siteNames)){
-  ecoMat = dcast(eventID~AphiaID, data=subset(Occurrence, site==siteNames[i]))
+  ecoMat = dcast(eventID~AphiaID, data=subset(Occurrence.strata, site==siteNames[i]), 
+                 value.var = "AphiaID", length)
   sppcurve = specaccum(ecoMat[,-1], method = "random")
   sppAccum = rbind(sppAccum, 
                    data.frame(site = rep(siteNames[i], length(sppcurve$sites)),
@@ -279,5 +286,76 @@ pp + geom_ribbon(aes(ymin=richness-sd, ymax=richness+sd), alpha=0.3) + geom_line
 
 ```
 
+
+### Mid tide
+
+```{r}
+## filter by strata
+Occurrence.strata = Occurrence %>% filter(strata=="midtide", !is.na(AphiaID))
+
+## do it by site
+siteNames = unique(Occurrence.strata$site)
+
+## empty DF for results
+sppAccum = data.frame(site = character(),
+                      strata = character(),
+                      ncuad = numeric(),
+                      richness = numeric(), 
+                      sd = numeric())
+
+for (i in 1:length(siteNames)){
+  ecoMat = dcast(eventID~AphiaID, data=subset(Occurrence.strata, site==siteNames[i]), 
+                 value.var = "AphiaID", length)
+  sppcurve = specaccum(ecoMat[,-1], method = "random")
+  sppAccum = rbind(sppAccum, 
+                   data.frame(site = rep(siteNames[i], length(sppcurve$sites)),
+                              ncuad = sppcurve$sites, 
+                              richness = sppcurve$richness,
+                              sd = sppcurve$sd))
+}
+
+## make the plot
+pp = ggplot(sppAccum, aes(ncuad, richness, colour=site, fill=site))
+pp + geom_ribbon(aes(ymin=richness-sd, ymax=richness+sd), alpha=0.3) + geom_line() + geom_point() + 
+  theme_bw(base_size = 10) + xlab("Number of samples") + ylab("Accumulated number of Spp")
+
+```
+
+
+
+### Low tide
+
+
+```{r}
+## filter by strata
+Occurrence.strata = Occurrence %>% filter(strata=="lowtide", !is.na(AphiaID))
+
+## do it by site
+siteNames = unique(Occurrence.strata$site)
+
+## empty DF for results
+sppAccum = data.frame(site = character(),
+                      strata = character(),
+                      ncuad = numeric(),
+                      richness = numeric(), 
+                      sd = numeric())
+
+for (i in 1:length(siteNames)){
+  ecoMat = dcast(eventID~AphiaID, data=subset(Occurrence.strata, site==siteNames[i]), 
+                 value.var = "AphiaID", length)
+  sppcurve = specaccum(ecoMat[,-1], method = "random")
+  sppAccum = rbind(sppAccum, 
+                   data.frame(site = rep(siteNames[i], length(sppcurve$sites)),
+                              ncuad = sppcurve$sites, 
+                              richness = sppcurve$richness,
+                              sd = sppcurve$sd))
+}
+
+## make the plot
+pp = ggplot(sppAccum, aes(ncuad, richness, colour=site, fill=site))
+pp + geom_ribbon(aes(ymin=richness-sd, ymax=richness+sd), alpha=0.3) + geom_line() + geom_point() + 
+  theme_bw(base_size = 10) + xlab("Number of samples") + ylab("Accumulated number of Spp")
+
+```
 
 
