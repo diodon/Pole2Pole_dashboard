@@ -80,10 +80,12 @@ Read the site information
 ```{r readsiteinfo}
 ## Reading data 
 beachData = read_xlsx(path = datafileName, sheet = 1)
+beachData$Country = toupper(beachData$Country)
+
+
 siteDF = beachData[,1:21]
 nRecords = nrow(beachData)
 
-beachData$Country = toupper(beachData$Country)
 
 ## read the locsite dictionary
 dictCountry = read_xlsx(path="../data/locsiteDictionary_beach.xlsx", sheet = 1)
@@ -117,10 +119,10 @@ Map of the sites
 siteDF$Latitude = as.numeric(siteDF$Latitude)
 siteDF$Longitude = as.numeric(siteDF$Longitude)
 
-siteCoords = siteDF %>% dplyr::group_by(City, Beach, Zone) %>% 
+siteCoords = siteDF %>% dplyr::group_by(locality, site, strata) %>% 
   dplyr::summarise(lng = mean(Longitude, na.rm=T), 
             lat = mean(Latitude, na.rm=T))
-leaflet(siteCoords) %>% addTiles() %>% addMarkers(label = ~paste0(Beach, "-", Zone))
+leaflet(siteCoords) %>% addTiles() %>% addMarkers(label = ~paste0(site, "-", strata))
 
 ```
 
@@ -134,7 +136,7 @@ You need to check the taxonomy of your species names before thos step. To need t
 ```{r readabundance}
 
 ## lets transform the DF into a long format using reshape
-Abundance.lf = melt(beachData, id.vars = c(1,11,12,16,19:22), measure.vars = 23:ncol(beachData), 
+Abundance.lf = melt(beachData, id.vars = c(1,3:5,11,12,16,19:22), measure.vars = 23:ncol(beachData), 
                     variable.name = "scientificName", value.name = "abundance", na.rm = T)
 
 ## remove ecords with abundance==0
@@ -162,7 +164,7 @@ Occurrence = left_join(Occurrence, taxonNamesMatched, by = c("scientificName"="S
 
 ### Create eventID and occurrenceID
 
-`eventId` is the combination of `Country`, `City`, `Beach`, `Station`, `Transect` and `Level`.
+`eventId` is the combination of `Country`, `locality`, `site`, `Station`, `Transect` and `Level`.
 For the `occurrenceID` is the same `eventID` but with a serial number of the records added
 
 ```{r createIDs}
@@ -218,11 +220,11 @@ eventFile = data.frame(eventID = eventID,
                        decimalLatitude = siteDF$Latitude, 
                        geodeticDatum = rep(NA,nrow(siteDF)),
                        coordinateUncertaintyInMeters = rep(NA, nrow(siteDF)),
-                       habitat= paste0("Sandy Beach-", siteDF$Zone),
+                       habitat= paste0("Sandy Beach-", siteDF$strata),
                        country = siteDF$Country, 
-                       locality = siteDF$City)
+                       locality = siteDF$locality)
 
-readr::write_csv(path = paste0(baseDataDir, siteDF$countryCode[1], "-beach_event.csv"), eventFile)
+readr::write_csv(path = paste0(baseDataDir, countryCode[1], "-beach_event.csv"), eventFile)
 
 ```
 
@@ -249,7 +251,7 @@ occurrenceFile = data.frame(occurrenceID = Occurrence$occurrenceID,
                             basisOfRecord = rep("HumanObservation", nrow(Occurrence)),
                             occurrenceStatus = rep("present", nrow(Occurrence)))
 
-readr::write_csv(path = paste0(baseDataDir, siteDF$countryCode[1], "-beach_occurrence.csv"), occurrenceFile)
+readr::write_csv(path = paste0(baseDataDir, countryCode[1], "-beach_occurrence.csv"), occurrenceFile)
 
 
 ```
@@ -281,7 +283,7 @@ MoFFile = data.frame(occurrenceID = Occurrence$occurrenceID,
                        measurementUnit = rep("count", nrow(Occurrence)),
                        measurementUnitID = rep("count", nrow(Occurrence))) ## needs to be checked
 
-readr::write_csv(path = paste0(baseDataDir, siteDF$countryCode[1], "-beach_MoF.csv"), MoFFile)
+readr::write_csv(path = paste0(baseDataDir, countryCode[1], "-beach_MoF.csv"), MoFFile)
 
 
 
