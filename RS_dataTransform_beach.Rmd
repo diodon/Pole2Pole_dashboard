@@ -1,5 +1,5 @@
 ---
-title: "P2P rockyshore: Data read and transformatio"
+title: "P2P rockyshore: Data read and transformation"
 author: 'E. Klein'
 date: "March 2019"
 output: 
@@ -65,7 +65,7 @@ In the next chunk of code you need to specify the name of the file, including th
 
 ## add the file name here, with eh correct path
 ## I'll use Grego's data as an example
-baseDataDir =  "../data/beach/MEX//"
+baseDataDir =  "../data/beach/MEX/"
 
 datafileName = paste0(baseDataDir, "SB_yucatan_mexico_march2019.xlsx")
 
@@ -81,9 +81,9 @@ Read the site information
 ## Reading data 
 beachData = read_xlsx(path = datafileName, sheet = 1)
 siteDF = beachData[,1:21]
-siteDF$Country = toupper(siteDF$Country)
+nRecords = nrow(beachData)
 
-Abundance = beachData[,22:ncol(beachData)]
+beachData$Country = toupper(beachData$Country)
 
 ## read the locsite dictionary
 dictCountry = read_xlsx(path="../data/locsiteDictionary_beach.xlsx", sheet = 1)
@@ -91,13 +91,12 @@ dictLocality  = read_xlsx(path="../data/locsiteDictionary_beach.xlsx", sheet = 2
 dictSite = read_xlsx(path="../data/locsiteDictionary_beach.xlsx", sheet = 3)
 
 ## add codes to country/loc/site
-siteDF = left_join(siteDF, dictCountry)
-siteDF = left_join(siteDF, dictLocality)
-siteDF = left_join(siteDF, dictSite)
-
+countryCode = left_join(siteDF, dictCountry)$countryCode
+localityCode = left_join(siteDF, dictLocality)$localityCode
+siteCode = left_join(siteDF, dictSite)$siteCode
 
 ## create eventID: countryCode-LocalityCode-SiteCode-strataCode-yymmdd
-eventID = paste(siteDF$countryCode, siteDF$localityCode, siteDF$siteCode, siteDF$Station, 
+eventID = paste(countryCode, localityCode, siteCode, siteDF$Station, 
                        siteDF$Transect, siteDF$Level,
                        paste0(year(siteDF$Date), 
                               sprintf("%02i", month(siteDF$Date)), 
@@ -105,8 +104,8 @@ eventID = paste(siteDF$countryCode, siteDF$localityCode, siteDF$siteCode, siteDF
                        sep = "-")
 
 
-## put eventID as forst variable
-siteDF = cbind(eventID, siteDF)
+## put eventID as first variable
+beachData = cbind(eventID, beachData)
 ```
 
 ### Map of the Sites
