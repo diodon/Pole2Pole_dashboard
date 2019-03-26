@@ -23,12 +23,12 @@ palette(brewer.pal(8, "Set2"))
 ```
 
 ```{r dataread}
-baseDataDir = "../data/beach/MEX/"
-siteDF = read_csv(file = paste0(baseDataDir, "MX_beach_siteDF.csv"))
-Occurrence = read_csv(file = paste0(baseDataDir, "MX_beach_occurrence.csv"))
+baseDataDir = "../data/beach/BRA/"
+siteDF = read_csv(file = paste0(baseDataDir, "BR_beach_siteDF.csv"))
+Occurrence = read_csv(file = paste0(baseDataDir, "BR_beach_occurrence.csv"))
 
 ## reorder strata factor
-##Occurrence$strata = factor(Occurrence$strata, levels = c("Infralitoral", "Mesolitoral", "Supralitoral"))
+##Occurrence$strata = factor(Occurrence$strata, levels = c("infralittoral", "mesolittoral", "supralittoral"))
 
 
 ```
@@ -57,7 +57,7 @@ siteAbund = Occurrence %>% dplyr::filter(!is.na(AphiaID))  %>%
 siteCoords = full_join(siteCoords, siteAbund)
 
 ## create a color palette
-pal <- colorFactor(brewer.pal(3, "Set2"), domain = c("Infralitoral", "Mesolitoral", "Supralitoral"))
+pal <- colorFactor(brewer.pal(3, "Set2"), domain = c("infralittoral", "mesolittoral", "supralittoral"))
 
 ## make leaflet map
 leaflet(siteCoords) %>% addTiles() %>% 
@@ -79,7 +79,7 @@ taxaquadrat = Occurrence %>%
   dplyr::group_by(locality, strata, Transect) %>% 
   dplyr::summarise(taxa.n = n())
 
-##taxaquadrat$strata = factor(taxaquadrat$strata, levels = c("Infralitoral", "Mesolitoral", "Supralitoral"))
+##taxaquadrat$strata = factor(taxaquadrat$strata, levels = c("infralittoral", "mesolittoral", "supralittoral"))
 
 pp = ggplot(taxaquadrat, aes(strata, taxa.n, fill=strata))
 pp = pp + geom_boxplot() + ylab("Number of taxa per sample") + 
@@ -167,8 +167,8 @@ taxaTable = Occurrence %>%
   dplyr::summarise(Taxon = unique(ScientificName_accepted), 
             rank = unique(rank), 
             Infra = sum(strata=="Infralittoral", na.rm=T), 
-            Meso = sum(strata=="Mesolittoral", na.rm=T), 
-            Supra = sum(strata=="Supralittoral", na.rm=T))
+            Meso = sum(strata=="mesolittoral", na.rm=T), 
+            Supra = sum(strata=="supralittoral", na.rm=T))
 
 knitr::kable(taxaTable)
 
@@ -211,7 +211,7 @@ Row
 
 ```{r}
 ## filter by strata
-Occurrence.strata = Occurrence %>% filter(strata=="Supralittoral", !is.na(AphiaID))
+Occurrence.strata = Occurrence %>% filter(strata=="supralittoral", !is.na(AphiaID))
 
 ## do it by site
 siteNames = unique(Occurrence.strata$locality)
@@ -246,7 +246,7 @@ pp + geom_ribbon(aes(ymin=richness-sd, ymax=richness+sd), alpha=0.3) + geom_line
 
 ```{r}
 ## filter by strata
-Occurrence.strata = Occurrence %>% filter(strata=="Mesolittoral", !is.na(AphiaID))
+Occurrence.strata = Occurrence %>% filter(strata=="mesolittoral", !is.na(AphiaID))
 
 ## do it by site
 siteNames = unique(Occurrence.strata$locality)
@@ -283,7 +283,7 @@ pp + geom_ribbon(aes(ymin=richness-sd, ymax=richness+sd), alpha=0.3) + geom_line
 
 ```{r}
 ## filter by strata
-Occurrence.strata = Occurrence %>% filter(strata=="Infralittoral", !is.na(AphiaID))
+Occurrence.strata = Occurrence %>% filter(strata=="infralittoral", !is.na(AphiaID))
 
 ## do it by site
 siteNames = unique(Occurrence.strata$locality)

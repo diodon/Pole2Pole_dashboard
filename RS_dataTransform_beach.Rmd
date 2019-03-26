@@ -65,13 +65,13 @@ In the next chunk of code you need to specify the name of the file, including th
 
 ## add the file name here, with eh correct path
 ## I'll use Grego's data as an example
-baseDataDir =  "../data/beach/MEX/"
+baseDataDir =  "../data/beach/BRA/"
 
-datafileName = paste0(baseDataDir, "SB_yucatan_mexico_march2019.xlsx")
+datafileName = paste0(baseDataDir, "Data_SandyBeach_PontalParana_Atami.xlsx")
 
 ## taxa name file Abundance
 datataxonName.Abund = paste0(baseDataDir, "taxalist.csv")
-datataxonNameMatched.Abund = paste0(baseDataDir, "taxalist_matched.txt")
+datataxonNameMatched.Abund = paste0(baseDataDir, "atami_matched.txt")
 
 ```
 
