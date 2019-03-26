@@ -324,7 +324,7 @@ eventFile = data.frame(eventID = siteDF$eventID,
                        country = siteDF$country, 
                        locality = siteDF$locality)
 
-readr::write_csv(path = paste0("../data/rocky/", siteDF$countryCode[1], "-", siteDF$localityCode[1], "_event.csv"), eventFile)
+readr::write_csv(path = paste0("../data/rocky/", siteDF$countryCode[1], "-", siteDF$localityCode[1], "_ipt_event.csv"), eventFile)
 
 ```
 
@@ -351,7 +351,7 @@ occurrenceFile = data.frame(occurrenceID = Occurrence$occurrenceID,
                             basisOfRecord = rep("HumanObservation", nrow(Occurrence)),
                             occurrenceStatus = rep("present", nrow(Occurrence)))
 
-readr::write_csv(path = paste0("../data/rocky/", siteDF$countryCode[1], "-", siteDF$localityCode[1], "_occurrence.csv"), occurrenceFile)
+readr::write_csv(path = paste0("../data/rocky/", siteDF$countryCode[1], "-", siteDF$localityCode[1], "_ipt_occurrence.csv"), occurrenceFile)
 
 
 ```
@@ -399,7 +399,7 @@ MoF.cover = data.frame(occurrenceID = Occurrence.cover$occurrenceID,
 
 MoFFile = bind_rows(MoF.abund, MoF.cover)
 
-readr::write_csv(path = paste0("../data/rocky/", siteDF$countryCode[1], "-", siteDF$localityCode[1], "_MoF.csv"), MoFFile)
+readr::write_csv(path = paste0("../data/rocky/", siteDF$countryCode[1], "-", siteDF$localityCode[1], "_ipt_MoF.csv"), MoFFile)
 
 
 
