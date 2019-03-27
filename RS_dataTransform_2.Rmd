@@ -66,16 +66,18 @@ In the next chunk of code you need to specify the name of the file, including th
 ## add the file name here, with eh correct path
 ## I'll use Grego's data as an example
 baseDataDir =  "../data/rocky/ARG/"
+filenameRoot = "ARG_"
 
 datafileName = paste0(baseDataDir, "Data_Sheet_RockyShore_GB_Puerto Madryn.xlsx")
 
 ## taxa name file Abundance
-datataxonName.Abund = paste0(baseDataDir, "taxonameAbund.csv")
+## datataxonName.Abund = paste0(baseDataDir, "taxonameAbund.csv")  ## not needed anymore
 datataxonNameMatched.Abund = paste0(baseDataDir, "taxonameAbund_matched.txt")
 
 ## taxa name file Cover
-datataxonName.Cover = paste0(baseDataDir, "taxonameCover.csv")
+## datataxonName.Cover = paste0(baseDataDir, "taxonameCover.csv")  ## not needed anymore
 datataxonNameMatched.Cover = paste0(baseDataDir, "taxonameCover_matched.txt")
+
 
 ```
 
@@ -100,6 +102,9 @@ siteDF = read_xlsx(path = datafileName, sheet = 3, range = cell_cols("A:S"),
 ## remove the first two rows (as range took precedence)
 siteDF = siteDF[3:nrow(siteDF),]
 
+## conver country name to upeer case
+siteDF$country = toupper(siteDF$country)
+
 
 ## read the locsite dictionary
 dictCountry = read_xlsx(path="../data/locsiteDictionary.xlsx", sheet = 1)
@@ -113,14 +118,14 @@ siteDF = left_join(siteDF, dictSite)
 
 
 ## create eventID: countryCode-LocalityCode-SiteCode-strataCode-yymmdd
-eventID = paste(siteDF$countryCode, siteDF$localityCode, siteDF$siteCode, 
-                       toupper(substr(siteDF$strata,1,3)),
-                       paste0(siteDF$yyear, sprintf("%02i", siteDF$mmonth), sprintf("%02i", siteDF$dday)), 
-                       sep = "-")
+##eventID = paste(siteDF$countryCode, siteDF$localityCode, siteDF$siteCode, 
+##                       toupper(substr(siteDF$strata,1,3)),
+##                       paste0(siteDF$yyear, sprintf("%02i", siteDF$mmonth), sprintf("%02i", siteDF$dday)), 
+##                       sep = "-")
 
 
-## put eventID as forst variable
-siteDF = cbind(eventID, siteDF)
+## put eventID as first variable
+##siteDF = cbind(eventID, siteDF)
 ```
 
 ### Map of the Sites
@@ -153,6 +158,7 @@ names(Abundance)[1:7] = c("eventDate", "country", "locality", "site", "strata", 
 ## we need to remove the last rows that contains the totals. They are identified as eventDate in NA
 Abundance = Abundance[!is.na(Abundance$eventDate),]
 Abundance$replicateID = as.numeric(Abundance$replicateID)
+Abundance$country = toupper(Abundance$country)
 
 ## 
 
@@ -184,6 +190,8 @@ names(Cover)[1:7] = c("eventDate", "country", "locality", "site", "strata", "pic
 ## we need to remove the last rows that contains the totals. They are identified as eventDate in NA
 Cover = Cover[!is.na(Cover$eventDate),]
 
+## convert country to uppercase
+Cover$country = toupper(Cover$country)
 
 ## 
 
@@ -244,7 +252,7 @@ Occurrence = left_join(Occurrence, taxonNamesMatched, by = c("scientificName"="S
 
 ```
 
-### Create eventID and occurrenceID
+### Create eventID and occurrenceID for occurrence DF
 
 `eventId` is the combination of `country`, `locality`, `site`, `strata`, `eventDate` and `replicateID`.
 For the `occurrenceID` is the same `eventID` but with a serial number of the records added
@@ -267,6 +275,10 @@ eventID = paste(Occurrence$countryCode, Occurrence$localityCode, Occurrence$site
 
 Occurrence = cbind(eventID, Occurrence)
 
+## eventID to siteDF
+siteDF = cbind(eventID, siteDF)
+
+
 ## create occurrenceID, adding the seq number
 organismSeq = 1:nrow(Occurrence)
 occurrenceID = paste(eventID, sprintf("%000005i", organismSeq), sep="-")
@@ -279,8 +291,8 @@ Occurrence = cbind(occurrenceID, Occurrence)
 ### save file for analysis
 
 ```{r savefiles}
-readr::write_csv(path = paste0(baseDataDir, siteDF$localityCode[1], "_siteDF.csv"), siteDF)
-readr::write_csv(path = paste0(baseDataDir, siteDF$localityCode[1], "_occurrence.csv"), Occurrence)
+readr::write_csv(path = paste0(baseDataDir, filenameRoot, siteDF$localityCode[1], "_dashboard_siteDF.csv"), siteDF)
+readr::write_csv(path = paste0(baseDataDir, filenameRoot, siteDF$localityCode[1], "_dashboard_occurrence.csv"), Occurrence)
 
 ```
 
