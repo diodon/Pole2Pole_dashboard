@@ -24,8 +24,8 @@ palette(brewer.pal(8, "Set2"))
 
 ```{r dataread}
 baseDataDir = "../data/rocky/ARG/"
-siteDF = read_csv(file = paste0(baseDataDir, "PMAD_siteDF.csv"))
-Occurrence = read_csv(file = paste0(baseDataDir, "PMAD_occurrence.csv"))
+siteDF = read_csv(file = paste0(baseDataDir, "ARG_PMAD_dashboard_siteDF.csv"))
+Occurrence = read_csv(file = paste0(baseDataDir, "ARG_PMAD_dashboard_occurrence.csv"))
 
 ## reorder strata factor
 Occurrence$strata = factor(Occurrence$strata, levels = c("lowtide", "midtide", "hightide"))
