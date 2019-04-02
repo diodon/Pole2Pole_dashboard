@@ -67,8 +67,8 @@ In the next chunk of code you need to specify the name of the file, including th
 ## I'll use Grego's data as an example
 
 countryDir = "MEX"
-dataFileName = "SB_yucatan_mexico_march2019.xlsx"
-wormsMatched = "taxalist_matched.txt"
+dataFileName = "SB_yucatan_mexico_march2019_final.xlsx"
+wormsMatched = "taxalistfinal_matched.txt"
 
 
 baseDataDir =  paste0("../data/beach/", countryDir, "/")
@@ -84,12 +84,18 @@ datataxonNameMatched.Abund = paste0(baseDataDir, wormsMatched)
 Read the site information
 
 ```{r readsiteinfo}
+
+
+## variable format
+
+
 ## Reading data 
 beachData = read_xlsx(path = datafileName, sheet = 1)
 
 ## standardise the variable types and format
 beachData$Country = toupper(beachData$Country)
 beachData$site = as.character(beachData$site)
+
 
 
 
