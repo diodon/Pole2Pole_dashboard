@@ -23,9 +23,11 @@ palette(brewer.pal(8, "Set2"))
 ```
 
 ```{r dataread}
-baseDataDir = "../data/beach/BRA/"
-siteDF = read_csv(file = paste0(baseDataDir, "BR_beach_siteDF.csv"))
-Occurrence = read_csv(file = paste0(baseDataDir, "BR_beach_occurrence.csv"))
+countryDir = "BRA"
+
+baseDataDir = paste0("../data/beach/", countryDir, "/")
+siteDF = read_csv(file = paste0(baseDataDir, countryDir, "_beach_siteDF.csv"))
+Occurrence = read_csv(file = paste0(baseDataDir, countryDir, "_beach_occurrence.csv"))
 
 ## reorder strata factor
 ##Occurrence$strata = factor(Occurrence$strata, levels = c("infralittoral", "mesolittoral", "supralittoral"))

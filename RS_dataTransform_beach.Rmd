@@ -65,13 +65,19 @@ In the next chunk of code you need to specify the name of the file, including th
 
 ## add the file name here, with eh correct path
 ## I'll use Grego's data as an example
-baseDataDir =  "../data/beach/BRA/"
 
-datafileName = paste0(baseDataDir, "Data_SandyBeach_PontalParana_Atami.xlsx")
+countryDir = "MEX"
+dataFileName = "SB_yucatan_mexico_march2019.xlsx"
+wormsMatched = "taxalist_matched.txt"
+
+
+baseDataDir =  paste0("../data/beach/", countryDir, "/")
+datafileName = paste0(baseDataDir, dataFileName)
 
 ## taxa name file Abundance
-datataxonName.Abund = paste0(baseDataDir, "taxalist.csv")
-datataxonNameMatched.Abund = paste0(baseDataDir, "atami_matched.txt")
+datataxonNameMatched.Abund = paste0(baseDataDir, wormsMatched)
+
+
 
 ```
 
@@ -80,7 +86,11 @@ Read the site information
 ```{r readsiteinfo}
 ## Reading data 
 beachData = read_xlsx(path = datafileName, sheet = 1)
+
+## standardise the variable types and format
 beachData$Country = toupper(beachData$Country)
+beachData$site = as.character(beachData$site)
+
 
 
 siteDF = beachData[,1:21]
@@ -181,8 +191,8 @@ Occurrence = cbind(occurrenceID, Occurrence)
 ### save file for analysis
 
 ```{r savefiles}
-readr::write_csv(path = paste0(baseDataDir, countryCode[1], "_beach_siteDF.csv"), siteDF)
-readr::write_csv(path = paste0(baseDataDir, countryCode[1], "_beach_occurrence.csv"), Occurrence)
+readr::write_csv(path = paste0(baseDataDir, countryDir, "_beach_siteDF.csv"), siteDF)
+readr::write_csv(path = paste0(baseDataDir, countryDir, "_beach_occurrence.csv"), Occurrence)
 
 ```
 
