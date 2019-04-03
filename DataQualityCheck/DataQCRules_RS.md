@@ -1,5 +1,13 @@
 # Data quality check for **Rocky Shores**
 
+The excel workbook contains three sheets
+
+1. Abundance
+2. Cover
+3. Site details
+
+
+## SHEET #3 SITE details
 
 Index | Variable | Type      | Rules
 ------|----------|-----------|-------------------
@@ -25,4 +33,7 @@ Index | Variable | Type      | Rules
 19    | Rugosity (ratio) | numeric | [0,1]
 
 
+## SHEET #2 COVER
 
+
+## SHEET #1 ABUNDANCE
