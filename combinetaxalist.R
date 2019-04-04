@@ -6,7 +6,7 @@ library(fs)
 
 
 ## rocky or beach
-basedir = "../data2/taxalist/beach"
+basedir = "../data2/taxalist/rocky"
 
 filenames = dir_ls(path = basedir, regexp = "txt")
 
