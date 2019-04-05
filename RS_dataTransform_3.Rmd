@@ -68,12 +68,12 @@ In the next chunk of code you need to specify the name of the file, including th
 ## rocky or beach
 baseDataDir =  "../data2"
 baseEcosystem = "rocky"
-fileName = "USA-PUMPHOUSE201807.xlsx"
+fileName = "ARG-BASaquarium.xlsx"
 
 datafileName = file.path(baseDataDir, baseEcosystem, fileName)
 
 ## taxa dictionary file name
-taxaDictFileName = "RS-taxonlistALL.csv"
+taxaDictFileName = file.path(baseDataDir, "taxalist", baseEcosystem, "RS-taxonlistALL.csv")
 
 taxaDict = read_tsv(taxaDictFileName)
 
@@ -105,7 +105,7 @@ siteDF$country = toupper(siteDF$country)
 siteDF$locality = toupper(siteDF$locality)
 siteDF$site = toupper(siteDF$site)
 siteDF$strata = toupper(siteDF$strata)
-siteDF$eventDate = ymd(paste0(siteDF$yyear, siteDF$mmonth, siteDF$dday))
+siteDF$eventDate = ymd(paste0(siteDF$yyear, sprintf("%02i",siteDF$mmonth), sprintf("%02i",siteDF$dday)))
 
 ## eventID for siteDF
 siteDF$eventID = paste(siteDF$country, gsub(" ", "", siteDF$locality), 
@@ -275,8 +275,8 @@ Occurrence = cbind(occurrenceID, Occurrence)
 fileNameSite = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]), "dashboard_siteDF.csv", sep="_")
 fileNameOccurrence = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]), "dashboard_occurrence.csv", sep="_")
 
-readr::write_csv(path = file.path(baseDataDir, "DataAnalysisFiles", fileNameSite), siteDF)
-readr::write_csv(path = file.path(baseDataDir,"DataAnalysisFiles", fileNameOccurrence), Occurrence)
+write_csv(path = file.path(baseDataDir, "DataAnalysisFiles", baseEcosystem, fileNameSite), siteDF)
+write_csv(path = file.path(baseDataDir,"DataAnalysisFiles", baseEcosystem, fileNameOccurrence), Occurrence)
 
 ```
 
