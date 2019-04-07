@@ -1,7 +1,7 @@
 # Data quality check for **Rocky Shores**
 
 
-**NOTE:** this checks are for the ORINAL data entry spreadsheets. New spreadsheets wiil be produced with few additions and some format changes. The actual sheets are valid until further notice
+**NOTE:** this checks are for the ORIGINAL data entry spreadsheets. New spreadsheets wiil be produced with few additions and some format changes. The actual sheets are valid until further notice
 
 
 
