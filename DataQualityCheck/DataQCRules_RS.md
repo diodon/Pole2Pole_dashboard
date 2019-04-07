@@ -11,7 +11,7 @@ The excel workbook contains three sheets
 1. `country` column must be the same all sheets
 2. `locality` column must be the same in all sheets
 3. `site` column must be the same in all sheets
-4. The terms used in the `strata` column must coincide in all sheets 
+4. The terms used in the `strata` column must coincide in all sheets. Usually "HIGHTIDE", "MIDTIDE", "LOWTIDE"
 
 
 
