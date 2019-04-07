@@ -1,7 +1,10 @@
-## combine worms matched files
+## combine worms matched files for each of the Localities
+
 library(readr)
 library(dplyr)
 library(fs)
+library(worrms)
+
 
 
 
@@ -34,8 +37,19 @@ matchednames = matchednames[complete.cases(matchednames),]
 ## remove complete duplicates
 matchednames = matchednames[!duplicated(matchednames),]
 
+
+## get the rank for each taxon from WoRMS
+matchednames$rank = NA
+for (i in 1: nrow(matchednames)){
+  print(paste0(i, "- ", matchednames$AphiaID_accepted[i], " - ", matchednames$ScientificName_accepted[i]))
+  matchednames$rank[i] = tail(wm_classification(matchednames$AphiaID_accepted[i])$rank, 1)
+  
+}
+
 ## remove accepted Aphia ID duplicates
 matchednames.uniqueAphia = matchednames[!duplicated(matchednames$AphiaID_accepted),]
+
+
 
 
 ## write file

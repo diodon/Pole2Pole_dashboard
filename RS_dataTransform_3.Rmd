@@ -148,6 +148,7 @@ names(Abundance)[1:7] = c("eventDate", "country", "locality", "site", "strata", 
 Abundance = Abundance[!is.na(Abundance$eventDate),]
 Abundance$replicateID = as.numeric(Abundance$replicateID)
 Abundance$country = toupper(Abundance$country)
+Abundance$strata = toupper(Abundance$strata)
 
 ## 
 
@@ -182,6 +183,7 @@ Cover = Cover[!is.na(Cover$eventDate),]
 ## convert country to uppercase
 Cover$replicateID = as.numeric(Cover$replicateID)
 Cover$country = toupper(Cover$country)
+Cover$strata = toupper(Cover$strata)
 
 ## 
 
@@ -272,8 +274,10 @@ Occurrence = cbind(occurrenceID, Occurrence)
 ### save file for analysis
 
 ```{r savefiles}
-fileNameSite = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]), "dashboard_siteDF.csv", sep="_")
-fileNameOccurrence = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]), "dashboard_occurrence.csv", sep="_")
+fileNameSite = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]), 
+                     gsub(" ", "", siteDF$site[1]),"dashboard_siteDF.csv", sep="_")
+fileNameOccurrence = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]),
+                           gsub(" ", "", siteDF$site[1]), "dashboard_occurrence.csv", sep="_")
 
 write_csv(path = file.path(baseDataDir, "DataAnalysisFiles", baseEcosystem, fileNameSite), siteDF)
 write_csv(path = file.path(baseDataDir,"DataAnalysisFiles", baseEcosystem, fileNameOccurrence), Occurrence)
