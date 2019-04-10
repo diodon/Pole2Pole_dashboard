@@ -1,0 +1,374 @@
+---
+title: "P2P Rockyshore Biodiversity Explorer"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(reshape2)
+library(leaflet)
+library(ggplot2)
+library(vegan)
+library(xts)
+library(dygraphs)
+library(plotly)
+library(lubridate)
+library(dplyr)
+
+library(RColorBrewer)
+palette(brewer.pal(8, "Set2"))
+
+
+```
+
+
+```{r}
+## functions
+
+## remove all spaces from string
+NoSpaces = function(x){
+  return(gsub(" ", "", x))
+}
+```
+
+
+```{r dataread}
+
+
+## add here the names of the file to analyse, with the correct path
+
+## add the file name here, with eh correct path
+## rocky or beach
+baseDataDir =  "../data2"
+baseEcosystem = "rocky"
+SSTSiteName = "Arraial do Cabo"
+
+fileName = "BRAZIL_ARRAIALDOCABO_FORTALEZA_dashboard_"
+datafileName = file.path(baseDataDir, baseEcosystem, fileName)
+
+
+siteDF = read_csv(file = file.path(baseDataDir, "DataAnalysisFiles", baseEcosystem, paste0(fileName, "siteDF.csv")))
+Occurrence = read_csv(file = file.path(baseDataDir, "DataAnalysisFiles",baseEcosystem, paste0(fileName, "occurrence.csv")))
+
+Occurrence$abundance = as.numeric(Occurrence$abundance)
+Occurrence$Cover = as.numeric(Occurrence$Cover)
+
+
+## reorder strata factor
+Occurrence$strata = factor(Occurrence$strata, levels = c("LOWTIDE", "MIDTIDE", "HIGHTIDE"))
+
+## remove spp without AphiaID
+## Occurrence = Occurrence[!is.na(Occurrence$AphiaID),]
+
+
+```
+
+
+General Information
+======================================================================
+
+Column
+-----------------------------------------------------------------------
+
+### Locality: `r siteDF$locality[1]` {data-width=250}
+
+```{r map}
+## get lat lon
+siteCoords = siteDF %>% dplyr::group_by(locality, site, strata) %>% 
+  dplyr::summarise(lng = mean(decimalLongitude, na.rm=T), 
+            lat = mean(decimalLatitude, na.rm=T))
+## get total abund and cover
+siteAbund = Occurrence %>% dplyr::filter(!is.na(AphiaID))  %>% 
+  dplyr::group_by(locality, site, strata) %>% 
+  dplyr::summarise(sumAbund = sum(abundance, na.rm=T), 
+            sumCover = sum(Cover, na.rm=T), 
+            richness = n())
+
+## add abund and cover to coords
+siteCoords = full_join(siteCoords, siteAbund)
+
+## create a color palette
+pal <- colorFactor(brewer.pal(3, "Set2"), domain = c("LOWTIDE", "MIDTIDE", "HIGHTIDE"))
+
+## make leaflet map
+leaflet(siteCoords) %>% addTiles() %>% 
+  addCircleMarkers(label = ~paste0(site, "-", strata, " / N Taxa: ", richness), 
+                   radius = ~100 * richness/sum(richness) + 4,
+                   color = ~pal(strata), 
+                   fillOpacity = 0.8,
+                   stroke = F,
+                   clusterOptions = markerClusterOptions()) %>% 
+  addMiniMap(toggleDisplay = T)
+
+```
+
+
+### SST 
+
+```{r SST}
+## plot SST from stored values
+
+## get sampling event dates
+samplingDates = unique(siteDF$eventDate)
+
+
+## read SST values
+SSTDir = "sst"
+SST = read_csv(file.path(baseDataDir, SSTDir, paste0(NoSpaces(SSTSiteName), "_SST.csv")))
+SST.clim = read_csv(file.path(baseDataDir, SSTDir, paste0(NoSpaces(SSTSiteName), "_Climatology.csv")))
+
+SST.xts = as.xts(SST$SST, SST$time)
+dygraph(SST.xts, 
+        ylab = "Sea Surface Temperature °C") %>% 
+  dySeries("V1", label ="SST °C", color = "steelblue") %>%
+  dyHighlight(highlightCircleSize = 5, 
+              highlightSeriesBackgroundAlpha = 0.2,
+              hideOnMouseOut = FALSE) %>% 
+  dyOptions(fillGraph = FALSE, fillAlpha = 0.4) %>% 
+  dyEvent(samplingDates,  color="red") %>% 
+  dyRangeSelector(dateWindow = c(max(SST$time) - years(5), max(SST$time)))
+
+
+```
+
+
+
+### SST Last year with smoothed Climatology {data-width=250}
+
+```{r}
+## subset SST for last year
+SST.lastyear = SST %>% filter(year(time)==max(year(time)))
+
+## make the plot
+pp = ggplot(SST.clim, aes(yDay, SST.mean))
+pp = pp + geom_line() + geom_smooth(span=0.25, se=FALSE, colour="steelblue") +  
+  geom_ribbon(aes(ymin=SST.q25, ymax=SST.q75), fill="steelblue", alpha=0.5) +
+  geom_line(data=SST.lastyear, aes(yday(time), SST), colour="red") + 
+  ylab("Sea Surface Temperature °C") + xlab("Day of the Year") + 
+  theme_bw(base_size = 12) 
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
+
+Column
+-----------------------------------------------------------------------
+
+
+
+### taxonomic rank distribution
+
+```{r taxonrank}
+
+## summarise the results
+taxranks = as.data.frame(table(Occurrence$rank))
+
+## make a donut
+p = taxranks %>% plot_ly(labels = ~Var1, values=~Freq) %>% 
+  add_pie(hole=0.6) %>% 
+  layout(title = ~paste0("Total number of Taxa: ", length(unique(Occurrence$AphiaID)))) 
+
+plotly::config(p,displayModeBar = F) 
+
+
+
+```
+
+
+### Species frequency
+
+```{r}
+taxafreq = Occurrence %>% dplyr::filter(!is.na(AphiaID)) %>% 
+  dplyr::group_by(site, strata, ScientificName_accepted) %>% 
+  dplyr::summarise(sppfreq = n()) %>% 
+  dplyr::arrange(sppfreq) %>% 
+  dplyr::mutate(sppacum = cumsum(sppfreq))
+
+pp = ggplot(taxafreq, aes(ScientificName_accepted, sppfreq, fill=strata))
+pp = pp + geom_bar(stat="identity") + coord_flip() + facet_grid(~site) + 
+  theme_bw(base_size = 9) + xlab("") + ylab("number of quadrats present")
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
+### Taxa list: number of quadrats where found 
+
+```{r taxalist}
+taxaTable = Occurrence %>% 
+  dplyr::group_by(AphiaID) %>% dplyr::filter(!is.na(AphiaID)) %>% 
+  dplyr::summarise(Taxon = unique(ScientificName_accepted), 
+            rank = unique(rank), 
+            lowtide = sum(strata=="LOWTIDE", na.rm=T), 
+            midtide = sum(strata=="MIDTIDE", na.rm=T), 
+            hightide = sum(strata=="HIGHTIDE", na.rm=T))
+
+knitr::kable(taxaTable)
+
+```
+
+
+Indicators
+=======================================================
+
+```{r taxonomy}
+## get taxonomy for AphiaID
+## read taxonomy file
+taxonomyFileName = file.path(baseDataDir, "taxalist", baseEcosystem, "RS-taxonlistALL_nonduplicated_taxonomy.csv")
+taxonomy = read_tsv(taxonomyFileName)
+
+## add taxonomy to Occurrence DF
+Occurrence.taxonomy = left_join(Occurrence[,c("AphiaID", "site")], taxonomy, by="AphiaID")
+
+```
+
+
+
+Row
+-------------------------------------------------------
+
+### Number of species
+```{r}
+nspp = length(unique(Occurrence.taxonomy$AphiaID))
+gauge(nspp, min=0, max=50)
+```
+
+
+### Number of Mollusc species
+```{r}
+nMolluscs = length(unique(Occurrence.taxonomy$AphiaID[Occurrence.taxonomy$Phylum=="Mollusca"]))
+gauge(nMolluscs, min=0, max=20)
+```
+
+
+### Number of Algae species
+
+```{r}
+nPlants = length(unique(Occurrence.taxonomy$AphiaID[Occurrence.taxonomy$Kingdom=="Plantae"]))
+gauge(nPlants, min=0, max=20)
+
+```
+
+### Number of Echinoderm species
+
+```{r}
+nEchino = length(unique(Occurrence.taxonomy$AphiaID[Occurrence.taxonomy$Phylum=="Echinodermata"]))
+gauge(nEchino, min=0, max=20)
+
+```
+
+Row
+------------------------------------------------------
+
+
+### Number of taxa per site and stratum
+
+```{r taxasite}
+taxaquadrat = Occurrence %>% filter(scientificName!="Bare Rock", scientificName!="Without Substrate") %>% 
+  group_by(site, strata, replicateID) %>% 
+  summarise(taxa.n = n())
+taxaquadrat$strata = factor(taxaquadrat$strata, levels = c("LOWTIDE", "MIDTIDE", "HIGHTIDE"))
+
+pp = ggplot(taxaquadrat, aes(strata, taxa.n, fill=strata))
+pp = pp + geom_boxplot() + ylab("Number of taxa per quadrat") + 
+  facet_grid(~site) + 
+  theme_bw(base_size = 9) + theme(legend.position = "none")
+
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+
+```
+
+### Abundance of taxa per site and stratum
+
+```{r taxaabund}
+
+pp = ggplot(Occurrence, aes(strata, abundance, group=strata, fill=strata))
+pp = pp + geom_boxplot() + ylab("Abundance of all taxa per quadrat") + 
+  facet_grid(~site) + 
+  theme_bw(base_size = 9) + theme(legend.position = "none")
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+### Average live cover per strata
+
+```{r taxacover}
+taxacover = Occurrence %>% dplyr::filter(!is.na(AphiaID)) %>% 
+  dplyr::group_by(site, strata, replicateID) %>% 
+  dplyr::summarise(sumcover = sum(Cover, na.rm=T))
+
+pp = ggplot(taxacover, aes(strata, sumcover, fill=strata))
+pp = pp + geom_boxplot() + ylab("% Cover of all taxa per quadrat") + 
+  facet_grid(~site) + 
+  theme_bw(base_size = 9) + theme(legend.position = "none")
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
+
+
+Row
+-------------------------------------------------------
+
+### Distribution of Classes
+
+```{r taxaclassdist}
+
+tt = table(Occurrence.taxonomy$Class, Occurrence.taxonomy$site)
+
+taxaclass = as.data.frame(prop.table(tt,2))
+names(taxaclass) = c("Class", "Site", "Freq")
+
+pp = ggplot(taxaclass, aes(Class, Freq, fill=Site))
+pp = pp + geom_bar(stat="identity") + facet_grid(~Site) + coord_flip() + 
+  xlab("") + ylab("Proportion of individuals") + ylim(0,1) + 
+  theme_bw(base_size = 12) + theme(legend.position = "none")
+
+ggplotly(pp)
+```
+
+
+### % of Bare Rock Cover
+
+```{r barerock}
+barerock = Occurrence %>% 
+  filter(scientificName=="Bare rock") %>% 
+  group_by(site, strata) %>% 
+  summarise(brock = mean(Cover), rest = 100-brock)
+
+pp = ggplot(barerock, aes(strata, brock, fill=site))
+pp = pp + geom_bar(stat = "identity") + coord_flip() + 
+  xlab("") + ylab("% Bare Rock") + ylim(0,100) +
+  theme_bw(base_size = 12) + theme(legend.position = 'none') + 
+  facet_grid(~site)
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
+### % Live Cover
+
+```{r livecover}
+
+pp = ggplot(barerock, aes(strata, rest, fill=site))
+pp = pp + geom_bar(stat = "identity") + coord_flip() + 
+  xlab("") + ylab("% Live Cover") + ylim(0,100) +
+  theme_bw(base_size = 12) + theme(legend.position = 'none') + 
+  facet_grid(~site)
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
