@@ -1,10 +1,23 @@
 # Data quality check for **Rocky Shores**
 
+
+**NOTE:** this checks are for the ORIGINAL data entry spreadsheets. New spreadsheets wiil be produced with few additions and some format changes. The actual sheets are valid until further notice
+
+
+
 The excel workbook contains three sheets
 
 1. Abundance
 2. Cover
 3. Site details
+
+## GENERAL CHECKS
+
+1. `country` column must be the same all sheets
+2. `locality` column must be the same in all sheets
+3. `site` column must be the same in all sheets
+4. The terms used in the `strata` column must coincide in all sheets. Usually "HIGHTIDE", "MIDTIDE", "LOWTIDE"
+
 
 
 ## SHEET #3 SITE details
@@ -35,5 +48,28 @@ Index | Variable | Type      | Rules
 
 ## SHEET #2 COVER
 
+Index | Variable | Type      | Rules
+------|----------|-----------|-------------------
+1     | Survey date     | date   | in yyyy-mm-dd format. Must coincide with ABUNDANCE sheet and year, month day in SITE
+2     | Country   | text      | valid ISO 3166 country name
+3     | Locality  | text    | Must coincide with ABUNDANCE and SITE sheets
+4     | Site      | text    | Must coincide with ABUNDANCE and SITE sheets
+5     | Strata    | text    | only "HIGHTIDE", "MIDTIDE", "LOWTIDE"
+6     | Picture number | text  | Must coincide with picture number in ABUNDANCE sheet
+7     | Replicate/Species | number | must be sequential. Must coincide with ABUNDANCE sheet
+8     | First species name | text | Must be "Bare Rock"
+9     | Second species name |  text | Must be "Whithout substrate"
 
 ## SHEET #1 ABUNDANCE
+
+Index | Variable | Type      | Rules
+------|----------|-----------|-------------------
+1     | Survey date     | date   | in yyyy-mm-dd format. Must coincide with ABUNDANCE sheet and year, month day in SITE
+2     | Country   | text      | valid ISO 3166 country name
+3     | Locality  | text    | Must coincide with COVER and SITE sheets
+4     | Site      | text    | Must coincide with COVER and SITE sheets
+5     | Strata    | text    | only "HIGHTIDE", "MIDTIDE", "LOWTIDE"
+6     | Picture number | text  | Must coincide with picture number in COVER sheet
+7     | Replicate/Species | number | must be sequential. Must coincide with COVER sheet
+8     | First species name | text  | must be the FIRST species in the table
+
