@@ -52,6 +52,7 @@ for (ii in 1:length(datafileNames)){
   siteDF$locality = toupper(siteDF$locality)
   siteDF$site = toupper(siteDF$site)
   siteDF$strata = toupper(siteDF$strata)
+  siteDF$pictureID = as.character(siteDF$pictureID)
   siteDF$eventDate = ymd(paste0(siteDF$yyear, sprintf("%02i",siteDF$mmonth), sprintf("%02i",siteDF$dday)))
   
   ## eventID for siteDF -- this is the MAIN (parent) eventID
@@ -88,6 +89,7 @@ for (ii in 1:length(datafileNames)){
   Abundance$locality = toupper(Abundance$locality)
   Abundance$site = toupper(Abundance$site)
   Abundance$strata = toupper(Abundance$strata)
+  Abundance$pictureID = as.character(Abundance$pictureID)
   
   ## 
   ## Transform the DF into a long format using reshape
@@ -119,6 +121,7 @@ for (ii in 1:length(datafileNames)){
   Cover$locality = toupper(Cover$locality)
   Cover$site = toupper(Cover$site)
   Cover$strata = toupper(Cover$strata)
+  Cover$pictureID = as.character(Cover$pictureID)
   
   ## 
   ## transform the DF into a long format using reshape
