@@ -56,7 +56,7 @@ fileName = "URU-BCHUY.xlsx"
 datafileName = file.path(baseDataDir, baseEcosystem, fileName)
 
 ## taxa dictionary file name
-taxaDictFileName = file.path(baseDataDir, "taxalist", baseEcosystem, "SB-taxonlistALL_2.csv")
+taxaDictFileName = file.path(baseDataDir, "taxalist", baseEcosystem, "taxonlistALL.csv")
 
 taxaDict = read_tsv(taxaDictFileName)
 
@@ -140,6 +140,9 @@ The name of the matched taxa file is specified in the file names chunk
 ## join the taxon fields to the abundance data
 Occurrence = left_join(Occurrence, taxaDict, by = c("scientificName"="ScientificName"))
 
+
+## remove records with no WoRMS match
+Occurrence = Occurrence %>% filter(!is.na(LSID))
 ```
 
 ### Create eventID and occurrenceID
