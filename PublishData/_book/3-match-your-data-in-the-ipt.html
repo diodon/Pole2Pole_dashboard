@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="3 Match your data in the IPT | MBON P2P" />
+<meta property="og:type" content="book" />
+
+
+<meta property="og:description" content="HOWTO: upload and publish your data ser" />
+<meta name="github-repo" content="diodon/Biodivexplorer" />
+
+<meta name="author" content="E. Klein" />
+
+<meta name="date" content="2019-05-18" />
+
+
+<meta name="description" content="HOWTO: upload and publish your data ser">
+
+<title>3 Match your data in the IPT | MBON P2P</title>
+
+<script src="libs/jquery/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap/shim/respond.min.js"></script>
+<script src="libs/navigation/tabsets.js"></script>
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid main-container">
+
+
+<div class="row">
+<div class="col-sm-12">
+<div id="TOC">
+<ul>
+<li><a href="index.html#introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="2-build-your-metadata.html#build-your-metadata"><span class="toc-section-number">2</span> Build your metadata</a></li>
+<li><a href="3-match-your-data-in-the-ipt.html#match-your-data-in-the-ipt"><span class="toc-section-number">3</span> Match your data in the IPT</a></li>
+<li><a href="4-publish-your-data.html#publish-your-data"><span class="toc-section-number">4</span> Publish your data</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="match-your-data-in-the-ipt" class="section level1">
+<h1><span class="header-section-number">3</span> Match your data in the IPT</h1>
+<p>For that step, the hard work is already done!. The scripts we’ve used to read the excel data tables and transform it into something more practical to analyze, also produced a set of files ready to be uploaded to the <a href="http://ipt.iobis.org/mbon">MBON IPT</a>.</p>
+<p>You will need <em>three</em> files for you locality that are in the Google drive folder <a href="">00-DataCurated-&gt;IPTFiles</a>. As usual, the files from the sandy beaches are in a different folder that the ones from the rocky shores. The files have the name of your locality/site and the prefixes _ipt_event, _ipt_occurrence and _ipt_MoF. Those files correspond to the EVENT-DATA schema of OBIS.</p>
+<p>NOTE: if you have several localities as separated files and want to publish all as a single data set, we can help you to merge the data. Just let us know.</p>
+<ol style="list-style-type: decimal">
+<li><p>Go to the Google drive folder where the IPT files are and download to your computer the three IPT files for your locality.</p></li>
+<li><p>In the IPT go to the tab <strong>Manage Resources</strong> and select your newly created data set. This will direct you to your resource main page, if you’re not already there.</p></li>
+<li><p>Upload your files. Go to the section <strong>upload files</strong> and select your files one by one. There will be a page confirming the number of records read and other details that you need to acknowledge. Once your three files uploaded you will see them in the right side panel</p></li>
+<li><p>Match your files with the event core and occurrence and MoF extensions</p></li>
+<li>Review the matching. In this step you will verifiy that the fields of your data table match with the DwC terms.</li>
+</ol>
+<ul>
+<li>Click on the <strong>Edit</strong> buttom at the right of the <strong>Event file</strong>. You will be directed to the page of the Event core fields. Verify that the names of the fields of your table correspond with the names of the Event core. Normally everything is correctly matched so you only need to click <strong>Save</strong>. Once saved, click <strong>Back</strong></li>
+<li>Click on the <strong>Edit</strong> buttom at the right of the occurrence file. YOu will be directed to the page of the occurrence extension. As in the previous step, everythong is correctly matched, but you need to change the match of the <code>scientificName</code> field. In this case, we will use <code>scientificName_accepted</code> as this is the one we extracted from WoRMS. Locate the <code>scientificName</code> field down to the Taxonomic section and using the pull down select the <code>scientificName_accepted</code> from your file.</li>
+</ul>
+</div>
+<p style="text-align: center;">
+<a href="2-build-your-metadata.html"><button class="btn btn-default">Previous</button></a>
+<a href="4-publish-your-data.html"><button class="btn btn-default">Next</button></a>
+</p>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>
