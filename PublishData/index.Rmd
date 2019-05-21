@@ -1,5 +1,5 @@
 ---
-title: "MBON P2P"
+title: "MBON Pole to Pole of the Americas"
 subtitle: "HOW TO upload and publish your data in OBIS and GBIF"
 author: "E. Klein"
 date: "`r Sys.Date()`"
@@ -26,13 +26,13 @@ options(htmltools.dir.version = FALSE)
 
 # Introduction
 
-This guide will help you to publish your data to OBIS and GBIF, and with that, obtain a DOI for your collection. 
+This guide will help you to publish your data to OBIS and GBIF, and by doing this, obtain a DOI for your collection. 
 
-This is a very easy process that could be accomplished in 30 minutes or less. 
+This is an easy process that could be accomplished under 30 minutes. 
 To publish your data you need to go through THREE easy steps:
 
-1. **Build your metadata**. Data without the metadata is simple useless. In this step you will enter the description of the project, sampling methods, collaborators funding agencies, etc. This is very important as you want your data set, collaborators and your institution attributed correctly. This is step is the longest one.
-2. **Match your data with the Darwin Core**. As we already formatted the data to be compatible with the DwC terms, this is a very quick step. Just upload your files and review the matches.
+1. **Build your metadata**. Data without the metadata is simply useless. In this step you will enter the description of the project, sampling methods, collaborators, funding agencies, etc. This is important as you want your data set, collaborators and institution acknowledge correctly. You will dedicate most of your time on this step.
+2. **Match your data with Darwin Core (DwC) schema**. Since your data should already be formatted according to DwC terms, this is likely the easiest and quickest step. Just upload your files and review the matches.
 3. **Publish your data**. As easy as two clicks!
 
 At the last workshop, we agree that all data sets will be published in [OBIS](http://obis.org) and [GBIF](http://gbif.org), and after the data is there, we will produce two data papers, one for the Sandy Beach data and other for the Rocky shore data.
@@ -72,7 +72,7 @@ You will see something like this:
 
 ## Basic Metadata
 
-There are few things we need to keep constant across all data sets of the project. Other things are very particular to your dataset and you need to fill it with the appropriate details.
+There are few things we need to keep constant across all data sets of the project. Other things are very particular to your dataset and you need to fill them up with the appropriate details.
 
 So click on `Edit` in the matadata section and begin to fill the information required:
 
@@ -82,7 +82,7 @@ So click on `Edit` in the matadata section and begin to fill the information req
 
 3. Update frequency, select **as needed**
 
-4. Licence type: select **Cretive COmmons Attribution (CC-BY) 4.0**. That means that the user must attribute the data to the owner.
+4. Licence type: select **Cretive COmmons Attribution (CC-BY) 4.0**. This means that the user must attribute the data to the owner.
 
 5. Description. Add a new paragraph with the following text: 
 
@@ -92,23 +92,23 @@ The MBON Pole to Pole effort seeks to develop a framework for the collection, us
 
 6. In the description, open another paragraph and add the information related to your sampling site. As a reference, see what Edlin _et al_ did in their [GBIF dataset landing page](https://www.gbif.org/dataset/36094b2b-bd50-4c6d-af52-264a155fc76f)
 
-7. Resource contacts, creator and metadata provider. You need to fill the details of the person responsible for this data set, probably you. Those are mandatory fields.
+7. Resource contacts, creator and metadata provider: You need to fill the details of the person responsible for this data set, probably you. These are mandatory fields.
 
 Click **Save**
 
 
 ## Geographical extent
 
-Add the coordinates of your sampling site clicking on `set global coverage`. The place for the coordinates will appear.
+Add the coordinates of your sampling site clicking on `set global coverage`. The field for coordinates will appear.
 
 You also need to add a description of your locality, e.g. Sandy beach of Playa del Carmen, Mexico
 
 ## Taxonomic Coverage
 
-Here you need to input all the scientific names you discovered in your site. 
+Here you need to input all the scientific names of organisms found at your study site. 
 You can easily extract this from the occurrence file of your site from the DataAnalysisFile folder in the projects google drive.
 
-Here is and example of the list of taxa from Puerto Madryn rocky shores sites:
+Here is an example of the list of taxa from Puerto Madryn rocky shores sites:
 
 ```{r message=FALSE}
 Occurrence = readr::read_csv("ARGENTINA_PUERTOMADRYN_PUNTAESTE_dashboard_occurrence.csv", progress = F)
@@ -152,17 +152,18 @@ Once finished, click **Save**
 
 ## Project Data
 
-1. Title. Use the same name you have used in the project title before.
+1. Title. Use the same name you used in the project title above.
 
-2. Description. Copy the same description you've used before.
+2. Description. Copy the same description you used above.
 
-3. Funding. Add the organization that provide your funds for the sampling
+3. Funding. Add the organization(s) that provide support for the sampling.
 
-4. Study area Description. Input here a general description of you sampling area. E.g. Playa del Carmen is a sandy beach of xx Km long with tidal range of xx m. the mean temperature is xx C and presents seasonal upwellings during the first months of the year. There is an important coastal development, mostly for tourism and during high season we could expect hundred of people using the beach....  something like this.
+4. Study area Description. Input a general description of you sampling area here. E.g. Playa del Carmen is a sandy beach of xx Km long with tidal range of xx m. the mean temperature is xx C and presents seasonal upwellings during the first months of the year. There is an important coastal development, mostly for tourism and during high season we could expect hundred of people using the beach....  something like this.
 
-5. Design description. Copy the design from the official methods for the corresponding Beach/Rocky environments
+5. Design description: Copy the sampling design from the official methods for the corresponding sandy beach or rocky shore habitats.
 
-6. Project Personnel. Here you will enter your collaborators and their specific role in the project. They all be included in the citation of the data set. Carefully select the role of each of the collaborators.
+6. Project personnel: Here you will enter your collaborators and their specific role in the project. They all must be included in the citation of the data set. Carefully select the role of each of the collaborators.
+
 Here you will enter the details of the project.
 
 ## Sampling methods. 
@@ -173,7 +174,7 @@ Click **Save**
 
 ## Citation
 
-This is how the data set will be cited. Click on the *Autogeneration* to turn it on. review the citation. If you think that something or someone is missing, go back to the corresponding section and make the modifications. 
+This is how the data set will be cited. Click on the *Autogeneration* to turn it on. Review the citation! If you think that something or someone is missing, go back to the corresponding section and make the modifications. 
 
 If there is any relevant bibliographic reference associated with your data set you can add it in this section.
 
@@ -198,14 +199,14 @@ Please add in the section **Additional Information** the following lines:
 
 click **Save**
 
-With that you have finished the description of your data set. Remember that more detail is always better. Also you, can modify your metadata later and the tinges will be reflected on the GBIF and OBIS sites.
+With that you have finished the description of your data set. Remember that more detail is always better. Also, you can modify your metadata later and the tinges will be reflected on the GBIF and OBIS sites.
 
 
 
 # 2. Match your data in the IPT
 
 For that step, the hard work is already done!
-The scripts we've used to read the excel data tables and transform it into something more practical to analyze, also produced a set of files ready to be uploaded to the [MBON IPT](http://ipt.iobis.org/mbon).
+The scripts we have used to read the Excel data tables and transform it into something more practical to analyze also produced a set of files ready to be uploaded to the [MBON IPT](http://ipt.iobis.org/mbon).
 
 You will need *three* files for you locality that are in the Google drive folder [00-DataCurated->IPTFiles](https://drive.google.com/open?id=1aXDbVtRminFY8LvE6Tc2r0mh9B4JjHXy). 
 As usual, the files from the sandy beaches are in a different folder that the ones from the rocky shores. 
@@ -216,13 +217,13 @@ NOTE: if you have several localities as separated files and want to publish all 
 
 1. Go to the Google drive folder where the IPT files are and download to your computer the three IPT files for your locality. 
 
-2. In the IPT go to the tab **Manage Resources** and select your newly created data set. This will direct you to your resource main page, if you're not already there. 
+2. In the IPT go to the tab **Manage Resources** and select your newly created data set. This will direct you to your resource main page, if you are not already there. 
 
-3. Upload your files. Go to the section **upload files** and select your files one by one. There will be a page confirming the number of records read and other details that you need to acknowledge. Once your three files uploaded you will see them in the right side panel
+3. Upload your files: Go to the section **upload files** and select your files one by one. There will be a page confirming the number of records read and other details that you need to acknowledge. Once your three files are uploaded you will see them in the right side panel
 
 4. Match your files with the event core and occurrence and MoF extensions
 
-5. Review the matching. In this step you will verify that the fields of your data table match with the DwC terms.
+5. Review the matching: In this step you will verify that the fields of your data table match with the DwC terms.
   + Click on the **Edit** button at the right of the **Event file**. You will be directed to the page of the Event core fields. Verify that the names of the fields of your table correspond with the names of the Event core. Normally everything is correctly matched so you only need to click **Save**. Once saved, click **Back**
   + Click on the **Edit** button at the right of the occurrence file. You will be directed to the page of the occurrence extension. As in the previous step, everything is correctly matched, but you need to change the match of the `scientificName` field. In this case, we will use `scientificName_accepted` as this is the one we extracted from WoRMS. Locate the `scientificName` field down to the Taxonomic section and using the pull down select the `scientificName_accepted` from your file.
   
@@ -235,13 +236,13 @@ Once the metadata has been completed and your data matched with the DwC terms of
 
 In the main page of your resource, first click **PUBLISH**. You will be asked to accept the GBIF terms.
 
-After, change the visibility to **PUBLIC**, so your data becomes publicly available.
+You can change the visibility to **PUBLIC** to make your data publicly available.
 
-Congratulations!!! your data in few minutes will be in OBIS and in GBIF. GBIF will provide you with a landing page with a DOI for your data.
+Congratulations!!! Within few minutes your data will be in OBIS and GBIF. GBIF will provide you with a landing page with a DOI for your data.
 
-Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems in minutes.
+Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes.
 
-If you have troubles do not hesitate to contact us.
+If you have questions or concerns about this process do not hesitate to contact us.
 
 
 Well done!!
