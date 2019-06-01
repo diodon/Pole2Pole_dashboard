@@ -44,7 +44,7 @@ Let's go step by step:
 
 
 
-# 1. Build your metadata
+# Build your metadata
 
 As it was mentioned, this step is as important as the collection of the data itself. 
 You will fill the metadata section of the IPT installation of the MBON project.
