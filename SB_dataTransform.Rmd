@@ -51,7 +51,7 @@ Last run `r lubridate::now()`
 ## rocky or beach
 baseDataDir =  "../data2"
 baseEcosystem = "beach"
-fileName = "URU-BCHUY.xlsx"
+fileName = "MEX-YUCATAN.xlsx"
 
 datafileName = file.path(baseDataDir, baseEcosystem, fileName)
 
@@ -215,13 +215,17 @@ readr::write_csv(path = file.path(baseDataDir, "IPTFiles/beach", paste0(siteDF$C
 
 ```{r}
 ## create occurrence file
+## check for present or absent based on abundance 
+Occurrence$occurrenceStatus = ifelse(Occurrence$abundance==0, "absent", "present")
+
 ### Occurrence extension file
 occurrenceFile = data.frame(occurrenceID = Occurrence$occurrenceID, 
                             eventID = Occurrence$eventID,
                             scientificName = Occurrence$ScientificName_accepted,
                             scientificNameID = Occurrence$LSID,
                             basisOfRecord = rep("HumanObservation", nrow(Occurrence)),
-                            occurrenceStatus = rep("present", nrow(Occurrence)))
+                            occurrenceStatus = Occurrence$occurrenceStatus)
+
 readr::write_csv(path = file.path(baseDataDir, "IPTFiles/beach", paste0(siteDF$Country[1], "-", siteDF$City[1],"-" , siteDF$Beach[1], "_ipt_occurrence.csv")), occurrenceFile)
 
 ```

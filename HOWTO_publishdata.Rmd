@@ -1,0 +1,45 @@
+---
+title: "MBON P2P"
+subtitle: "HOWTO upload and publish your data in OBIS and GBIF"
+author: "E. Klein"
+date: "`r Sys.Date()`"
+output:  
+  bookdown::gitbook:
+    split_by: none
+    config: 
+      download: ['pdf']
+      search: yes
+  bookdown::pdf_book:
+    base_format: tufte::tufte_handout
+documentclass: book
+github-repo: diodon/Biodivexplorer
+description: "HOWTO: upload and publish your data ser"
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+# invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Introduction
+
+This guide will help you to publish your data to OBIS and GBIF, and with that, obtain a DOI for your collection. 
+
+This is a very easy process that could be accomplished in may be 30 minutes or less. To publish your data you need to go through THREE easy steps:
+
+1. **Build your metadata**. Data wothout the metadta is simple useless. In this step yout will enter the description of the project, sampling methods, collaborators funding agencies, etc. This is very important as you want your data set, collaborators and your institution attributed correctly. This is step is the longest one.
+2. **Match your data with the Darwin Core**. As we already formated the data to be compatible with the DwC terms, this is a very quick step. Just upload your files and review the matches.
+3. **Publish your data**. As easy as two clicks!
+
+At the last workshop, we agree that all data set will be published in OBIS and GBIF and after the data is there, we will produce two data papers, one for the Sandy Beach data and other for the ROcky shore data.
+
+**If you don't have time or think that you will not be able to publish your data, just let us know. We can hekp you!**
+
+
+Let's go step by step:
+
+# Build you metadata
+
+As it was mentioned, this steo is as important as the colection of the data itself. 

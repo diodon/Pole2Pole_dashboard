@@ -22,6 +22,7 @@ palette(brewer.pal(8, "Set2"))
 
 ```
 
+
 ```{r dataread}
 
 
@@ -31,7 +32,7 @@ palette(brewer.pal(8, "Set2"))
 ## rocky or beach
 baseDataDir =  "../data2"
 baseEcosystem = "rocky"
-fileName = "ARGENTINA_MARDELPLATA_dashboard_"
+fileName = "BRAZIL_ARRAIALDOCABO_FORTALEZA_dashboard_"
 
 datafileName = file.path(baseDataDir, baseEcosystem, fileName)
 
@@ -47,7 +48,7 @@ Occurrence$Cover = as.numeric(Occurrence$Cover)
 Occurrence$strata = factor(Occurrence$strata, levels = c("LOWTIDE", "MIDTIDE", "HIGHTIDE"))
 
 ## remove spp without AphiaID
-Occurrence = Occurrence[!is.na(Occurrence$AphiaID),]
+## Occurrence = Occurrence[!is.na(Occurrence$AphiaID),]
 
 
 ```
@@ -149,26 +150,14 @@ Column
 ### taxonomic rank distribution
 
 ```{r taxonrank}
-## library(worms)
-## get taxonomy file
-taxaDictFileName = file.path(baseDataDir, "taxalist", 
-                             baseEcosystem, "RS-taxonlistALL_nonduplicated_taxonomy.csv")
-taxaDict = read_tsv(taxaDictFileName)
-
-
-scNames = unique(Occurrence$AphiaID)
-scNames = left_join(data.frame(AphiaID=scNames), taxaDict)
-
-## get taxon rank from WoRMS
-##scNames.rank = wormsbyid(x = scNames, verbose = F)
 
 ## summarise the results
-taxranks = as.data.frame(table(scNames$rank))
+taxranks = as.data.frame(table(Occurrence$rank))
 
 ## make a donut
 p = taxranks %>% plot_ly(labels = ~Var1, values=~Freq) %>% 
   add_pie(hole=0.6) %>% 
-  layout(title = ~paste0("Total number of Taxa: ", length(scNames))) 
+  layout(title = ~paste0("Total number of Taxa: ", length(unique(Occurrence$AphiaID)))) 
 
 plotly::config(p,displayModeBar = F) 
 
@@ -198,11 +187,6 @@ ggplotly(pp) %>% plotly::config(displayModeBar = F)
 ### Taxa list: number of quadrats where found 
 
 ```{r taxalist}
-spRanks = scNames[,c("AphiaID", "rank")]
-
-## add taxon rank to occurrence table
-Occurrence = full_join(Occurrence, spRanks)
-
 taxaTable = Occurrence %>% 
   dplyr::group_by(AphiaID) %>% dplyr::filter(!is.na(AphiaID)) %>% 
   dplyr::summarise(Taxon = unique(ScientificName_accepted), 
@@ -219,20 +203,32 @@ knitr::kable(taxaTable)
 Indicators
 =======================================================
 
+```{r taxonomy}
+## get taxonomy for AphiaID
+## read taxonomy file
+taxonomyFileName = file.path(baseDataDir, "taxalist", baseEcosystem, "RS-taxonlistALL_nonduplicated_taxonomy.csv")
+taxonomy = read_tsv(taxonomyFileName)
+
+## add taxonomy to Occurrence DF
+Occurrence.taxonomy = left_join(Occurrence[,c("AphiaID", "site")], taxonomy, by="AphiaID")
+
+```
+
+
 
 Row
 -------------------------------------------------------
 
 ### Number of species
 ```{r}
-nspp = nrow(taxafreq)
+nspp = length(unique(Occurrence.taxonomy$AphiaID))
 valueBox(nspp)
 ```
 
 
 ### Number of Mollusc species
 ```{r}
-nMolluscs = sum(scNames$Phylum=="Mollusca", na.rm=T)
+nMolluscs = length(unique(Occurrence.taxonomy$AphiaID[Occurrence.taxonomy$Phylum=="Mollusca"]))
 valueBox(nMolluscs)
 ```
 
@@ -240,20 +236,81 @@ valueBox(nMolluscs)
 ### Number of Algal species
 
 ```{r}
-nPlants = sum(scNames$Kingdom=="Plantae", na.rm=T)
+nPlants = length(unique(Occurrence.taxonomy$AphiaID[Occurrence.taxonomy$Kingdom=="Plantae"]))
 valueBox(nPlants)
 
 ```
 
+### Number of Echinoderms
+
+```{r}
+nEchino = length(unique(Occurrence.taxonomy$AphiaID[Occurrence.taxonomy$Phylum=="Echinodermata"]))
+valueBox(nEchino)
+
+```
 
 
 Row
 -------------------------------------------------------
 
-### Number of Threatened species
+### Distribution of Classes
+
+```{r taxaclassdist}
+
+tt = table(Occurrence.taxonomy$Class, Occurrence.taxonomy$site)
+
+taxaclass = as.data.frame(prop.table(tt,2))
+names(taxaclass) = c("Class", "Site", "Freq")
+
+pp = ggplot(taxaclass, aes(Class, Freq, fill=Site))
+pp = pp + geom_bar(stat="identity") + facet_grid(~Site) + coord_flip() + 
+  xlab("") + ylab("Proportion of individuals") + ylim(0,1) + 
+  theme_bw(base_size = 12) + theme(legend.position = "none")
+
+ggplotly(pp)
+```
 
 
-### Number of Invasive Species
+### % of Bare Rock Cover
+
+```{r barerock}
+barerock = Occurrence %>% 
+  filter(scientificName=="Bare rock") %>% 
+  group_by(site, strata) %>% 
+  summarise(brock = mean(Cover), rest = 100-brock)
+
+pp = ggplot(barerock, aes(strata, brock, fill=site))
+pp = pp + geom_bar(stat = "identity") + coord_flip() + 
+  xlab("") + ylab("% Bare Rock") + ylim(0,100) +
+  theme_bw(base_size = 12) + theme(legend.position = 'none') + 
+  facet_grid(~site)
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
 
 
-### Number of XXXX Species
+### % Live Cover
+
+```{r livecover}
+
+pp = ggplot(barerock, aes(strata, rest, fill=site))
+pp = pp + geom_bar(stat = "identity") + coord_flip() + 
+  xlab("") + ylab("% Live Cover") + ylim(0,100) +
+  theme_bw(base_size = 12) + theme(legend.position = 'none') + 
+  facet_grid(~site)
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
+Row
+------------------------------------------------
+
+### figure
+
+```{r}
+knitr::include_graphics(path = "/home/eklein/Proyectos/MBON/P2P/P2P_dataflow.png")
+```
+

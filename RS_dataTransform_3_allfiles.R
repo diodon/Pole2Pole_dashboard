@@ -255,12 +255,18 @@ for (ii in 1:length(datafileNames)){
   
   
   ### Occurrence extension file
+  
+  ## check for present or absent based on abundance 
+  Occurrence$occurrenceStatus = ifelse((Occurrence$abundance==0 & Occurrence$Cover==0) | (is.na(Occurrence$abundance) & is.na(Occurrence$Cover)),
+                                       "absent", "present")
+  
+  
   occurrenceFile = data.frame(occurrenceID = Occurrence$occurrenceID, 
                               eventID = Occurrence$eventID,
                               scientificName = Occurrence$ScientificName_accepted,
                               scientificNameID = Occurrence$LSID,
                               basisOfRecord = rep("HumanObservation", nrow(Occurrence)),
-                              occurrenceStatus = rep("present", nrow(Occurrence)))
+                              occurrenceStatus = Occurrence$occurrenceStatus)
   
   
   readr::write_csv(path = file.path(baseDataDir, "IPTFiles", paste0(siteDF$country[1], "-", siteDF$locality[1], "_ipt_occurrence.csv")), occurrenceFile)

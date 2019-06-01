@@ -1,0 +1,19 @@
+---
+title: "Inpt File Parameterize Rmd Example"
+output: html_document
+params:  
+  data:  
+    input: file  
+    label: 'Input dataset:'  
+    value: kk.csv
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r data}
+cat(params$data)
+c <- read.csv(params$data)
+print(c)
+```

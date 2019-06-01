@@ -1,0 +1,508 @@
+---
+title: "P2P rockyshore: Data read and transformatio"
+author: 'E. Klein'
+date: "March 2019"
+output: 
+  html_document:
+    toc:  TRUE
+    toc_float: TRUE
+    theme: united
+    highlight: tango
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
+# make this an external chunk that can be included in any file
+require(knitr)
+options(width = 100, stringAsFactors=F)
+opts_chunk$set(echo =T, message = F, error = F, warning = F, comment = NA,  
+               fig.align = 'left',  fig.width = 7.5, fig.height = 6,
+               tidy = F, cache.path = '.cache/', fig.path = 'fig/')
+               
+library(RColorBrewer)
+palette(brewer.pal(8, "Set2"))
+
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(reshape2)
+library(leaflet)
+library(readr)
+
+```
+
+Last run `r lubridate::now()`
+
+
+## Introduction
+
+
+This document will read the standard P2P/SARCE rocky shore data template and transforms it into a flat file ready to be uploaded into the IPT.
+
+The data owner is responsible for the QC of the data, per OBIS standards, including [taxonomic QC](https://obis.org/manual/namematching) and [geographic and general data format QC](https://obis.org/manual/lifewatchqc)
+
+
+## The EVENT core schema for Rocky Shores
+
+To use the EVENT core schema and it associated Occurrence and Measurements or Facts extensions it is necessary to define the hierarchical schema of the data. For the Rocky shores, assuming that the sampling of the site os related to a repeated sampling of a Locality and it has transcects (with attributes like rugosity) and quadrats (with attibutes like inclination), the scheme is:
+
+* Main Event: SITE
+  + Event: TRANSECT (child of SITE)
+    + Event: QUADRAT (child of TRANSECT, SITE)
+
+
+
+## Understanding the excel data template
+
+Standard data template for Rocky shores is composed by a set of data sheets inside a single excel workbook. For this script work properly, you need to maintain the position of the variables in the table, not deleting or adding anything except new species names as new columns in the abundance/cover sheets.
+
+We've developped a [list of rules](https://github.com/diodon/P2P/blob/master/DataQualityCheck/DataQCRules_RS.md) for each of the variables. Take a look and understand the constrains and formats requirements related to each variable.
+
+
+## Read Data: Site 
+
+### Read Locality/Site information
+
+This is located in the `site description` tab in your workbook. It contains names, coordinates and other details about the sampling site.
+
+**It is absolutely necessary to have exactly the same Locality, Site and Strata names in all the sheets**
+
+In the next chunk of code you need to specify the name of the file, including the appropriate path
+
+
+```{r setfilename}
+
+## add here the names of the file to analyse, with the correct path
+
+## add the file name here, with eh correct path
+## rocky or beach
+baseDataDir =  "../data2"
+baseEcosystem = "rocky"
+fileName = "BRA-ARRAIALDOCABO.xlsx"
+
+datafileName = file.path(baseDataDir, baseEcosystem, fileName)
+
+## taxa dictionary file name
+taxaDictFileName = file.path(baseDataDir, "taxalist", baseEcosystem, "RS-taxonlistALL.csv")
+
+taxaDict = read_tsv(taxaDictFileName)
+
+```
+
+Read the site information
+
+```{r readsiteinfo}
+## I will read from line 3 as there are merged rows in rows 1-2 that fucks everything
+## NEVER NEVER NEVER merge columns or rows if you want to do a serious data analysis. NEVER.
+## Reading data upto the first rugosity column
+## set the names of the columns
+siteColNames = c("yyear", "mmonth", "dday", "country", "state", "locality", "site", "strata", 
+                 "pictureID", "stratumCriteria", "decimalLatitude", "decimalLongitude", 
+                 "coordinateUncertaintyInMeters", "geodeticDatum", 
+                 "substrateComposition", "isMPA", "isUrban", "isAffectedbySand", 
+                 "rugosityRatio")
+
+siteColTypes = c(rep("numeric", 3), rep("text", 7), rep("numeric", 3), rep("text", 5), "numeric")
+
+siteDF = read_xlsx(path = datafileName, sheet = 3, range = cell_cols("A:S"),  
+                   col_names = siteColNames, col_types = siteColTypes)
+
+## remove the first two rows (as range took precedence)
+siteDF = siteDF[3:nrow(siteDF),]
+
+## conver country name to upeer case
+siteDF$country = toupper(siteDF$country)
+siteDF$locality = toupper(siteDF$locality)
+siteDF$site = toupper(siteDF$site)
+siteDF$strata = toupper(siteDF$strata)
+siteDF$eventDate = ymd(paste0(siteDF$yyear, sprintf("%02i",siteDF$mmonth), sprintf("%02i",siteDF$dday)))
+
+## eventID for siteDF -- this is the MAIN (parent) eventID
+## country-locality-site-date
+siteDF$eventID = paste(siteDF$country, gsub(" ", "", siteDF$locality), 
+                gsub(" ", "", siteDF$site), 
+                paste0(year(siteDF$eventDate), 
+                              sprintf("%02i", month(siteDF$eventDate)), 
+                              sprintf("%02i", day(siteDF$eventDate))), 
+                sep="_")
+
+
+## TRANSECT eventID. Child of MAIN (parent) eventID
+## country-locality-site-date-strata
+siteDF$eventID.transect = paste(siteDF$country, gsub(" ", "", siteDF$locality), 
+                                gsub(" ", "", siteDF$site), 
+                                paste0(year(siteDF$eventDate), 
+                                       sprintf("%02i", month(siteDF$eventDate)), 
+                                       sprintf("%02i", day(siteDF$eventDate))), 
+                                siteDF$strata,
+                                sep="_")
+
+```
+
+### Map of the Sites
+
+
+Map of the sites
+
+```{r sitesMap}
+siteCoords = siteDF %>% dplyr::group_by(locality, site, strata) %>% 
+  dplyr::summarise(lng = mean(decimalLongitude, na.rm=T), 
+            lat = mean(decimalLatitude, na.rm=T))
+leaflet(siteCoords) %>% addTiles() %>% addMarkers(label = ~paste0(site, "-", strata))
+
+```
+
+
+
+
+## Read the Abundance data sheet
+
+You need to check the taxonomy of your species names before those step. To need to provide a file with the taxon match output from WoRMS. You only change the original taxon name if you cannot find it in Worms at the match. For all others cases where you can resolve the name using the online tools, you have to keep the original name in the excel table.
+
+```{r readabundance}
+Abundance = read_excel(path = datafileName, sheet =1, skip = 15)
+
+## change the name of the first columns
+names(Abundance)[1:7] = c("eventDate", "country", "locality", "site", "strata", "pictureID", "replicateID")
+
+## the rest of the columns will correspond to the scientific names in wide format.
+## we need to remove the last rows that contains the totals. They are identified as eventDate in NA
+Abundance = Abundance[!is.na(Abundance$eventDate),]
+Abundance$replicateID = as.numeric(Abundance$replicateID)
+Abundance$country = toupper(Abundance$country)
+Abundance$locality = toupper(Abundance$locality)
+Abundance$site = toupper(Abundance$site)
+Abundance$strata = toupper(Abundance$strata)
+
+## 
+## Transform the DF into a long format using reshape
+Abundance.lf = melt(Abundance, id.vars = 1:7, measure.vars = 8:ncol(Abundance), 
+                    variable.name = "scientificName", value.name = "abundance", na.rm = T)
+
+## verifiy that abundace is a number
+Abundance.lf$abundance = as.numeric(Abundance.lf$abundance)
+
+## remove ecords with abundance==0
+## uncommnet if you want to exclude abundace==0
+## Abundance.lf= Abundance.lf %>% dplyr::filter(abundance!=0)
+
+```
+
+
+## Read Data: Cover
+
+The data for cover is in the second sheet of the template with similar format as the Abundance sheet.
+
+### Read the Cover data sheet
+
+As you did for the Abundance table, You need to check the taxonomy of your species names before this step. To need to provide a file with the taxon match output from WoRMS. You only change the original taxon name if you cannot find it in Worms at the match. For all others cases where you can resolve the name using the online tools, you have to keep the original name in the excel table.
+
+```{r readcover}
+Cover = read_excel(path = datafileName, sheet =2, skip = 15)
+
+## change the name of the first columns
+names(Cover)[1:7] = c("eventDate", "country", "locality", "site", "strata", "pictureID", "replicateID")
+
+## the rest of the columns will correspond to the scientific names in wide format.
+## we need to remove the last rows that contains the totals. They are identified as eventDate in NA
+Cover = Cover[!is.na(Cover$eventDate),]
+
+## convert country to uppercase
+Cover$replicateID = as.numeric(Cover$replicateID)
+Cover$country = toupper(Cover$country)
+Cover$locality = toupper(Cover$locality)
+Cover$site = toupper(Cover$site)
+Cover$strata = toupper(Cover$strata)
+
+## 
+## transform the DF into a long format using reshape
+Cover.lf = melt(Cover, id.vars = 1:7, measure.vars = 8:ncol(Cover), 
+                    variable.name = "scientificName", value.name = "Cover", na.rm = T)
+
+## verify that Cover is a number
+Cover.lf$Cover = as.numeric(Cover.lf$Cover)
+
+
+## remove ecords with Cover==0
+## uncomment if you want to remove cover==0
+## Cover.lf = Cover.lf %>% dplyr::filter(Cover!=0)
+
+```
+
+
+### Join Abundance and Cover tables
+
+Every organism recorded for abundance and/or cover is an occurrence for the quadrat. 
+
+```{r joinabundCover}
+
+Occurrence = full_join(Abundance.lf, Cover.lf,  
+                       by = c("eventDate", "country", "locality", "site", "strata", "replicateID", "scientificName"))
+
+## order the result in long format data frame
+Occurrence = Occurrence %>% arrange(country, locality, site, strata, replicateID)
+```
+
+
+### Some statistics about the read file:
+
+```{r filestats}
+
+filestats = Occurrence %>% dplyr::group_by(locality, site, strata) %>% 
+  dplyr::summarise(nReplicates = length(unique(replicateID)), 
+            nrecords = n(), 
+            nTaxa = length(unique(scientificName)), 
+            nAbundances = sum(!is.na(abundance)), 
+            nCover = sum(!is.na(Cover)))
+
+knitr::kable(filestats)
+```
+
+
+### Add the taxon name info from the WoRMS matched file
+
+You have to have the file with the original scientific names and the accepted scientific name and the LSID from WoRMS. Please refer to the P2P web site to refresh how to do that.
+
+The name of the matched taxa file is specified in the file names chunk
+
+```{r readtaxonmatched}
+
+## join the taxon fields to the abundance data
+Occurrence = left_join(Occurrence, taxaDict, by = c("scientificName"="ScientificName"))
+
+```
+
+### Create eventID and occurrenceID for occurrence DF
+
+According to the schema, the `eventID` for the Ocurrence file is the quadrat, child of the `eventID.transect`, as stored in the siteDF file. it is necessary to incoporate every `eventID.quadrat` to the siteDF table with the corresponding attribute(s), if any.
+
+* country-locality-site-date-strata-quadrat (eventID, child of TRANSECT eventID)
+
+quadrat is based on the `replicateID` field.
+
+For the `occurrenceID` is the same `eventID.quadrat` but with a serial number of the records added
+
+
+```{r createIDs}
+
+## create eventID.quadrat
+## country-locality-site-date-strata
+eventID.quadrat = paste(Occurrence$country, gsub(" ", "", Occurrence$locality), 
+                gsub(" ", "", Occurrence$site), 
+                paste0(year(Occurrence$eventDate), 
+                              sprintf("%02i", month(Occurrence$eventDate)), 
+                              sprintf("%02i", day(Occurrence$eventDate))),
+                Occurrence$strata,
+                paste0("R", sprintf("%003i", Occurrence$replicateID)),
+                       sep = "_")
+
+Occurrence = cbind(eventID.quadrat, Occurrence)
+
+## eventID to siteDF
+## siteDF = cbind(siteDF$, siteDF)
+
+
+## create occurrenceID, adding the seq number
+organismSeq = 1:nrow(Occurrence)
+occurrenceID = paste(eventID.quadrat, sprintf("%000005i", organismSeq), sep="-")
+
+Occurrence = cbind(occurrenceID, Occurrence)
+
+## set eventData as Date
+Occurrence$eventDate = as.Date(Occurrence$eventDate)
+
+
+```
+
+
+
+## Create DwC EVENT, OCCURRENCE and eMoF files
+
+
+We will use abundance and cover in the eMoF extension. The vocabularies from OBIS [BODC NERC](http://vocab.nerc.ac.uk/collection/Q01/current/) corresponding to the methods, instruments and units are:
+
+1. quadrat: 
+2. abundance:
+3. cover:
+
+### Event core file
+
+the minimum set of mandatory fields for the event core are:
+
+- eventID	
+- eventDate	
+- samplingProtocol: from oceanbestpractices: SARCE http://dx.doi.org/10.25607/OBP-5
+- samplingSizeValue: 0.25 
+- samplingSizeUnit: square meters, from BODC vocabs.
+
+
+```{r eventCoreFile0}
+## create the structure of the table
+eventFile = data.frame(eventID = character(),
+                       parentEventID = character(),
+                       eventDate = as.Date(character()),
+                       habitat = character(),
+                       country = character(), 
+                       locality = character(),
+                       site = character(),
+                       strata = character(),
+                       decimalLongitude = numeric(),
+                       decimalLatitude = numeric(),
+                       coordinateUncertaintyInMeters = numeric(),
+                       geodeticDatum = character(),
+                       pictureID = character()
+                       )
+
+
+## create Grandparent eventID: SITE
+eventFile.site = siteDF %>% group_by(eventID) %>% 
+  summarise(parentEventID = "", 
+            eventDate = unique(eventDate),
+            habitat = "Rocky Shore",
+            country=unique(country),
+            locality = unique(locality),
+            site = unique(site),
+            strata = "",
+            decimalLongitude = mean(decimalLongitude),
+            decimalLatitude = mean(decimalLatitude),
+            coordinateUncertaintyInMeters = mean(coordinateUncertaintyInMeters),
+            geodeticDatum = "WGS84",
+            pictureID = unique(pictureID))
+
+
+## create eventID.TRANSECT
+eventFile.transect = siteDF %>% group_by(eventID = eventID.transect) %>% 
+  summarise(eventDate = unique(eventDate),
+            habitat = "Rocky Shore",
+            country=unique(country),
+            locality = unique(locality),
+            site = unique(site),
+            strata = unique(strata),
+            decimalLongitude = mean(decimalLongitude),
+            decimalLatitude = mean(decimalLatitude),
+            coordinateUncertaintyInMeters = mean(coordinateUncertaintyInMeters),
+            geodeticDatum = "WGS84",
+            pictureID = unique(pictureID), 
+            parentEventID = substr(eventID,1,
+                         unlist(gregexpr("_", eventID))[length(unlist(gregexpr("_", eventID)))]-1)
+            )
+
+
+## create eventID.QUADRAT
+eventFile.quadrat = Occurrence %>% group_by(eventID = eventID.quadrat) %>% 
+  summarise(eventDate = unique(eventDate), 
+            habitat = "Rocky Shore", 
+            country = unique(country), 
+            locality = unique(locality), 
+            site = unique(site), 
+            strata = unique(strata),
+            decimalLongitude = NA, 
+            decimalLatitude = NA, 
+            coordinateUncertaintyInMeters = NA, 
+            geodeticDatum = "", 
+            pictureID = "") %>% 
+  mutate(parentEventID = substr(eventID,1, nchar(as.character(eventID))-5))
+
+eventFile = bind_rows(eventFile.site, eventFile.transect, eventFile.quadrat)
+
+## write file
+readr::write_csv(path = file.path(baseDataDir, "IPTFiles", paste0(siteDF$country[1], "-", siteDF$locality[1], "_ipt_event.csv")), eventFile)
+
+```
+
+
+
+### Occurrence extension file
+
+The minimum set of required fields is:
+
+- eventID 
+- occurrenceID
+- scientificName
+- scientificNameAuthorship
+- scientificNameID
+- taxonRank
+- identificationQualifier
+- occurrenceStatus
+- basisOfRecord
+
+```{r occurrenceFile}
+occurrenceFile = data.frame(occurrenceID = Occurrence$occurrenceID, 
+                            eventID = Occurrence$eventID,
+                            scientificName = Occurrence$ScientificName_accepted,
+                            scientificNameID = Occurrence$LSID,
+                            basisOfRecord = rep("HumanObservation", nrow(Occurrence)),
+                            occurrenceStatus = rep("present", nrow(Occurrence)))
+
+
+readr::write_csv(path = file.path(baseDataDir, "IPTFiles", paste0(siteDF$country[1], "-", siteDF$locality[1], "_ipt_occurrence.csv")), occurrenceFile)
+
+```
+
+
+### Measurement or facts file
+
+Here we store abundance and cover for each occurrence
+
+the fields for the file:
+
+- measurementID: same organismID but with "abund" or "cover" added
+- measurementType: "abundance" or "cover"
+- measurementTypeID: according to vocab
+- measurementValue: value of abundance or cover
+- measurementUnit: verbatim "individuals", "percentage"
+- measurementUnitID: according to vocab
+
+```{r MoFFile}
+
+## we will do that first for abundance then for cover and them bind both DF 
+## abundance
+Occurrence.abun = subset(Occurrence, !is.na(abundance))
+MoF.abund = data.frame(occurrenceID = Occurrence.abun$occurrenceID, 
+                       eventID = Occurrence.abun$eventID,
+                       measurementType = rep("abundance", nrow(Occurrence.abun)),
+                       measurementTypeID = rep("http://vocab.nerc.ac.uk/collection/P06/current/UMSQ/1/",
+                                               nrow(Occurrence.abun)),
+                       measurementValue = as.numeric(Occurrence.abun$abundance), 
+                       measurementUnit = rep("count", nrow(Occurrence.abun)),
+                       measurementUnitID = rep("count", nrow(Occurrence.abun))) ## needs to be checked
+
+## cover
+Occurrence.cover = subset(Occurrence, !is.na(Cover))
+MoF.cover = data.frame(occurrenceID = Occurrence.cover$occurrenceID, 
+                       eventID = Occurrence.cover$eventID,
+                       measurementType = rep("cover", nrow(Occurrence.cover)),
+                       measurementTypeID = rep("http://vocab.nerc.ac.uk/collection/P01/current/SDBIOL10/",
+                                               nrow(Occurrence.cover)),
+                       measurementValue = as.numeric(Occurrence.cover$Cover), 
+                       measurementUnit = rep("percentage", nrow(Occurrence.cover)),
+                       measurementUnitID = rep("percentage", nrow(Occurrence.cover))) ## needs to be checked
+
+
+
+MoFFile = bind_rows(MoF.abund, MoF.cover)
+
+readr::write_csv(path = file.path(baseDataDir, "IPTFiles", paste0(siteDF$country[1], "-", siteDF$locality[1], "_ipt_MoF.csv")), MoFFile)
+
+
+```
+
+### save file for analysis
+
+One set of siteDF and Occurrence files per **SITE**
+
+
+```{r savefiles}
+fileNameSite = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]), 
+                     gsub(" ", "", siteDF$site[1]),"dashboard_siteDF.csv", sep="_")
+fileNameOccurrence = paste(siteDF$country[1], gsub(" ", "", siteDF$locality[1]),
+                           gsub(" ", "", siteDF$site[1]), "dashboard_occurrence.csv", sep="_")
+
+write_csv(path = file.path(baseDataDir, "DataAnalysisFiles", baseEcosystem, fileNameSite), eventFile)
+write_csv(path = file.path(baseDataDir,"DataAnalysisFiles", baseEcosystem, fileNameOccurrence), Occurrence)
+
+```
+

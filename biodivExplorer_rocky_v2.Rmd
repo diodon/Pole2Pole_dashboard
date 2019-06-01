@@ -44,9 +44,10 @@ NoSpaces = function(x){
 ## rocky or beach
 baseDataDir =  "../data2"
 baseEcosystem = "rocky"
-SSTSiteName = "Arraial do Cabo"
+SSTSiteName = "Gorgona"
 
-fileName = "BRAZIL_ARRAIALDOCABO_FORTALEZA_dashboard_"
+## fileName = "BRAZIL_ARRAIALDOCABO_FORTALEZA_dashboard_"
+fileName = "COLOMBIA_ISLAGORGONA_LAVENTANA_dashboard_"
 datafileName = file.path(baseDataDir, baseEcosystem, fileName)
 
 
@@ -60,8 +61,10 @@ Occurrence$Cover = as.numeric(Occurrence$Cover)
 ## reorder strata factor
 Occurrence$strata = factor(Occurrence$strata, levels = c("LOWTIDE", "MIDTIDE", "HIGHTIDE"))
 
-## remove spp without AphiaID
-## Occurrence = Occurrence[!is.na(Occurrence$AphiaID),]
+## set Bare Rock in correct format
+Occurrence$scientificName[Occurrence$scientificName=="Bare rock"] = "Bare Rock"
+Occurrence$scientificName[Occurrence$scientificName=="bare rock"] = "Bare Rock"
+
 
 
 ```
@@ -148,7 +151,7 @@ pp = pp + geom_line() + geom_smooth(span=0.25, se=FALSE, colour="steelblue") +
   geom_ribbon(aes(ymin=SST.q25, ymax=SST.q75), fill="steelblue", alpha=0.5) +
   geom_line(data=SST.lastyear, aes(yday(time), SST), colour="red") + 
   ylab("Sea Surface Temperature °C") + xlab("Day of the Year") + 
-  theme_bw(base_size = 12) 
+  theme_bw(base_size = 9) 
 ggplotly(pp) %>% plotly::config(displayModeBar = F) 
 
 ```
@@ -223,8 +226,10 @@ taxonomyFileName = file.path(baseDataDir, "taxalist", baseEcosystem, "RS-taxonli
 taxonomy = read_tsv(taxonomyFileName)
 
 ## add taxonomy to Occurrence DF
-Occurrence.taxonomy = left_join(Occurrence[,c("AphiaID", "site")], taxonomy, by="AphiaID")
+Occurrence.taxonomy = left_join(Occurrence[,c("AphiaID_accepted", "site")], taxonomy, by="AphiaID_accepted")
 
+## remove NAs
+Occurrence.taxonomy = Occurrence.taxonomy[!is.na(Occurrence.taxonomy$AphiaID_accepted),]
 ```
 
 
@@ -234,15 +239,15 @@ Row
 
 ### Number of species
 ```{r}
-nspp = length(unique(Occurrence.taxonomy$AphiaID))
-gauge(nspp, min=0, max=50)
+nspp = length(unique(Occurrence.taxonomy$AphiaID_accepted))
+gauge(nspp, min=0, max=100)
 ```
 
 
 ### Number of Mollusc species
 ```{r}
-nMolluscs = length(unique(Occurrence.taxonomy$AphiaID[Occurrence.taxonomy$Phylum=="Mollusca"]))
-gauge(nMolluscs, min=0, max=20)
+nMolluscs = length(unique(Occurrence.taxonomy$ScientificName_accepted[Occurrence.taxonomy$Phylum=="Mollusca"]))
+gauge(nMolluscs, min=0, max=40)
 ```
 
 
@@ -332,7 +337,7 @@ names(taxaclass) = c("Class", "Site", "Freq")
 pp = ggplot(taxaclass, aes(Class, Freq, fill=Site))
 pp = pp + geom_bar(stat="identity") + facet_grid(~Site) + coord_flip() + 
   xlab("") + ylab("Proportion of individuals") + ylim(0,1) + 
-  theme_bw(base_size = 12) + theme(legend.position = "none")
+  theme_bw(base_size = 9) + theme(legend.position = "none")
 
 ggplotly(pp)
 ```
@@ -342,14 +347,14 @@ ggplotly(pp)
 
 ```{r barerock}
 barerock = Occurrence %>% 
-  filter(scientificName=="Bare rock") %>% 
+  filter(scientificName=="Bare Rock") %>% 
   group_by(site, strata) %>% 
   summarise(brock = mean(Cover), rest = 100-brock)
 
 pp = ggplot(barerock, aes(strata, brock, fill=site))
 pp = pp + geom_bar(stat = "identity") + coord_flip() + 
   xlab("") + ylab("% Bare Rock") + ylim(0,100) +
-  theme_bw(base_size = 12) + theme(legend.position = 'none') + 
+  theme_bw(base_size = 9) + theme(legend.position = 'none') + 
   facet_grid(~site)
 
 ggplotly(pp) %>% plotly::config(displayModeBar = F) 
@@ -364,7 +369,7 @@ ggplotly(pp) %>% plotly::config(displayModeBar = F)
 pp = ggplot(barerock, aes(strata, rest, fill=site))
 pp = pp + geom_bar(stat = "identity") + coord_flip() + 
   xlab("") + ylab("% Live Cover") + ylim(0,100) +
-  theme_bw(base_size = 12) + theme(legend.position = 'none') + 
+  theme_bw(base_size = 9) + theme(legend.position = 'none') + 
   facet_grid(~site)
 
 ggplotly(pp) %>% plotly::config(displayModeBar = F) 

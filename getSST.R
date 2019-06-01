@@ -1,6 +1,8 @@
 ### Get SST timeseries from satellite products using erddap
 ### the source of data is `jplMURSST41`. See https://coastwatch.pfeg.noaa.gov/erddap/info/jplMURSST41/index.html
 ### data is extracted with `rerddap::griddap` for a particular coordinate and stored as csv file.
+### E Klein. eklein@usb.ve
+### 2019-04-10
 
 library(readr)
 library(rerddap)
@@ -19,8 +21,8 @@ NoSpaces = function(x){
 baseDataDir =  "../data2"
 SSTDir = "sst"
 
-## set site coordinaes and time for SST extraction
-SSTSiteName = "Arraial do Cabo"
+## set site coordinates and time for SST extraction
+SSTSiteName = "Arraial do Cabo"   ## for the resulting file name
 SSTcoords.lon = -41.95
 SSTcoords.lat = -23.00
 
