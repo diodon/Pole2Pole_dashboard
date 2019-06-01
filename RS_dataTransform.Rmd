@@ -1,0 +1,288 @@
+---
+title: "P2P rockyshore: Data read and transformatio"
+author: 'E. Klein'
+date: "March 2019"
+output: 
+  html_document:
+    toc:  TRUE
+    toc_float: TRUE
+    theme: united
+    highlight: tango
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
+# make this an external chunk that can be included in any file
+require(knitr)
+options(width = 100, stringAsFactors=F)
+opts_chunk$set(echo =T, message = F, error = F, warning = F, comment = NA,  
+               fig.align = 'left',  fig.width = 7.5, fig.height = 6,
+               tidy = F, cache.path = '.cache/', fig.path = 'fig/')
+               
+library(RColorBrewer)
+palette(brewer.pal(8, "Set2"))
+
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(reshape2)
+library(leaflet)
+
+```
+
+Last run `r lubridate::now()`
+
+
+## Introduction
+
+
+This document will read the standard P2P/SARCE rocky shore data template and transforms it into a flat file ready to be uploaded into the IPT.
+
+The data owner is responsible for the QC of the data, per OBIS standards, including [taxonomic QC](https://obis.org/manual/namematching) and [geographic and general data format QC](https://obis.org/manual/lifewatchqc)
+
+
+## Understanding the excel data template
+
+Standard data template for Rocky shores is composed by a set of data sheets inside a single excel workbook. For this script work properly, you need to maintain the position of the variables in the table, not deleting or adding anything except new species names as new columns in the abundance/cover sheets.
+
+## Read Data: Site 
+
+### Read Locality/Site information
+
+This is located in the `site description` tab in your workbook. It contains names, coordinates and other details about the sampling site.
+
+**It is absolutely necessary to have exactly the same Locality, Site and Strata names in all the sheets**
+
+In the next chunk of code you need to specify the name of the file, including the appropriate path
+
+
+```{r setfilename}
+
+## add here the names of the file to analyse, with the correct path
+
+## add the file name here, with eh correct path
+## I'll use Grego's data as an example
+datafileName = "../data/rocky/Data_Sheet_RockyShore_GB_Puerto Madryn.xlsx"
+
+## taxa name file Abundance
+datataxonName.Abund = "../data/rocky/taxonameAbund.csv"
+datataxonNameMatched.Abund = "../data/rocky/taxonameAbund_matched.txt"
+
+## taxa name file Cover
+datataxonName.Cover = "../data/rocky/taxonameCover.csv"
+datataxonNameMatched.Cover = "../data/rocky/taxonameCover_matched.txt"
+
+```
+
+Read the site information
+
+```{r readsiteinfo}
+## I will read from line 3 as there are merged rows in rows 1-2 that fucks everything
+## NEVER NEVER NEVER merge columns or rows if you want to do a serious data analysis. NEVER.
+## Reading data upto the first rugosity column
+## set the names of the columns
+siteColNames = c("yyear", "mmonth", "dday", "country", "state", "locality", "site", "strata", 
+                 "sitePicture", "stratumCriteria", "decimalLatitude", "decimalLongitude", 
+                 "coordinateUncertaintyInMeters", "geodeticDatum", 
+                 "substrateComposition", "isMPA", "isUrban", "isAffectedbySand", "isSandBeforeLand",
+                 "rugosityRatio")
+
+siteColTypes = c(rep("numeric", 3), rep("text", 7), rep("numeric", 3), rep("text", 6), "numeric")
+
+siteDF = read_xlsx(path = datafileName, sheet = 3, range = cell_cols("A:T"),  
+                   col_names = siteColNames, col_types = siteColTypes)
+
+## remove the first two rows (as range took precedence)
+siteDF = siteDF[3:nrow(siteDF),]
+
+
+## read the locsite dictionary
+dictCountry = read_xlsx(path="../data/locsiteDictionary.xlsx", sheet = 1)
+dictLocality  = read_xlsx(path="../data/locsiteDictionary.xlsx", sheet = 2)
+dictSite = read_xlsx(path="../data/locsiteDictionary.xlsx", sheet = 3)
+
+## add codes to country/loc/site
+siteDF = left_join(siteDF, dictCountry)
+siteDF = left_join(siteDF, dictLocality)
+siteDF = left_join(siteDF, dictSite)
+
+
+## create eventID: countryCode-LocalityCode-SiteCode-strataCode-yymmdd
+eventID = paste(siteDF$countryCode, siteDF$localityCode, siteDF$siteCode, 
+                       toupper(substr(siteDF$strata,1,3)),
+                       paste0(siteDF$yyear, sprintf("%02i", siteDF$mmonth), sprintf("%02i", siteDF$dday)), 
+                       sep = "-")
+
+parentEventID = rep("", length(eventID))
+
+## put eventID as forst variable
+siteDF = cbind(eventID, parentEventID, siteDF)
+```
+
+## Read the Abundance data sheet
+
+You need to check the taxonomy of your species names before thos step. To need to provide a file with the taxon match output from WoRMS. YOu only change the original taxon name if you cannot find it in Worms at the match. For all others cases where you can resolve the name using the online tools, you have to keep the original name in the excel table.
+
+```{r readabundance}
+Abundance = read_xlsx(path = datafileName, sheet =1, skip = 15)
+
+## change the name of the first columns
+names(Abundance)[1:7] = c("eventDate", "country", "locality", "site", "strata", "pictureID", "replicateID")
+
+## the rest of the columns will correspond to the scientific names in wide format.
+## we need to remove the last rows that contains the totals. They are identified as eventDate in NA
+Abundance = Abundance[!is.na(Abundance$eventDate),]
+
+
+## 
+
+## lets transform the DF into a long format using reshape
+Abundance.lf = melt(Abundance, id.vars = 1:7, measure.vars = 8:ncol(Abundance), 
+                    variable.name = "scientificName", value.name = "abundance", na.rm = T)
+
+
+## add Country, Locality and Site codes
+Abundance.lf = left_join(Abundance.lf, dictCountry)
+Abundance.lf = left_join(Abundance.lf, dictLocality)
+Abundance.lf = left_join(Abundance.lf, dictSite)
+
+## create eventID per quadrat
+eventID = paste(Abundance.lf$countryCode, Abundance.lf$localityCode, Abundance.lf$siteCode, 
+                       toupper(substr(Abundance.lf$strata,1,3)),
+                       paste0(year(Abundance.lf$eventDate), 
+                              sprintf("%02i", month(Abundance.lf$eventDate)), 
+                              sprintf("%02i", day(Abundance.lf$eventDate))),
+                       paste0("R", sprintf("%00004i", as.numeric(Abundance.lf$replicateID))),
+                       sep = "-")
+
+Abundance.lf = cbind(eventID, Abundance.lf)
+
+## Create occurrenceID, assuming no more than 9999 occurrences per quadrat
+organismSeq = 1:nrow(Abundance.lf)
+occurrenceID = paste(eventID, sprintf("%000005i", organismSeq), sep="-")
+
+Abundance.lf = cbind(occurrenceID, Abundance.lf)
+
+```
+
+Some statistics about the read file:
+
+```{r filestats}
+
+filestats = Abundance.lf %>% group_by(locality, site, strata) %>% 
+  summarise(nReplicates = length(unique(replicateID)), nrecords = n(), nTaxa = length(unique(scientificName)))
+
+kable(filestats)
+```
+
+
+### Add the taxon name info from the WoRMS matched file
+
+You hace to have the file with the original scientific names and the accepted scientific name and the LSID from WoRMS. Please refer to the P2P web site to refresh how to do that.
+
+The name of the matched taxa file is `taxonnameAbund_matched.txt`
+
+```{r readtaxonmatched}
+taxonNames = read.csv(file=datataxonNameMatched.Abund, sep="\t", stringsAsFactors = F)
+
+print(paste0("Total number of taxa read: ", nrow(taxonNames)))
+
+## join the taxon fields to the abundance data
+Abundance.lf = left_join(Abundance.lf, taxonNames, by = c("scientificName"="ScientificName"))
+```
+
+
+
+Map of the sites
+
+```{r sitesMap}
+siteCoords = siteDF %>% group_by(locality, site, strata) %>% 
+  summarise(lng = mean(decimalLongitude, na.rm=T), 
+            lat = mean(decimalLatitude, na.rm=T))
+
+m = leaflet(siteCoords) %>% addTiles() %>% addMarkers(label = ~paste0(site, "-", strata))
+m
+```
+
+
+
+## Read Data: Cover
+
+The data for cover is in the second sheet of the template with similar format as the Abundance sheet.
+
+### Read the Cover data sheet
+
+As you did for the Abundance table, You need to check the taxonomy of your species names before thi step. To need to provide a file with the taxon match output from WoRMS. YOu only change the original taxon name if you cannot find it in Worms at the match. For all others cases where you can resolve the name using the online tools, you have to keep the original name in the excel table.
+
+```{r readabundance}
+Cover = read_xlsx(path = datafileName, sheet =2, skip = 15)
+
+## change the name of the first columns
+names(Cover)[1:7] = c("eventDate", "country", "locality", "site", "strata", "pictureID", "replicateID")
+
+## the rest of the columns will correspond to the scientific names in wide format.
+## we need to remove the last rows that contains the totals. They are identified as eventDate in NA
+Cover = Cover[!is.na(Cover$eventDate),]
+
+
+## 
+
+## transform the DF into a long format using reshape
+Cover.lf = melt(Cover, id.vars = 1:7, measure.vars = 8:ncol(Cover), 
+                    variable.name = "scientificName", value.name = "Cover", na.rm = T)
+
+
+## add Country, Locality and Site codes
+Cover.lf = left_join(Cover.lf, dictCountry)
+Cover.lf = left_join(Cover.lf, dictLocality)
+Cover.lf = left_join(Cover.lf, dictSite)
+
+## create eventID per quadrat
+eventID = paste(Cover.lf$countryCode, Cover.lf$localityCode, Cover.lf$siteCode, 
+                       toupper(substr(Cover.lf$strata,1,3)),
+                       paste0(year(Cover.lf$eventDate), 
+                              sprintf("%02i", month(Cover.lf$eventDate)), 
+                              sprintf("%02i", day(Cover.lf$eventDate))),
+                       paste0("R", sprintf("%00004i", as.numeric(Cover.lf$replicateID))),
+                       sep = "-")
+
+Cover.lf = cbind(eventID, Cover.lf)
+
+## Create occurrenceID, assuming no more than 9999 occurrences per quadrat
+organismSeq = 1:nrow(Cover.lf)
+occurrenceID = paste(eventID, sprintf("%000005i", organismSeq), sep="-")
+
+Cover.lf = cbind(occurrenceID, Cover.lf)
+
+```
+
+Some statistics about the read file:
+
+```{r filestats}
+
+filestats = Cover.lf %>% group_by(locality, site, strata) %>% 
+  summarise(nReplicates = length(unique(replicateID)), nrecords = n(), nTaxa = length(unique(scientificName)))
+
+kable(filestats)
+```
+
+
+### Add the taxon name info from the WoRMS matched file
+
+You have to have the file with the original scientific names and the accepted scientific name and the LSID from WoRMS. Please refer to the P2P web site to refresh how to do that.
+
+The name of the matched taxa file is specified in the file names chunk
+
+```{r readtaxonmatched}
+taxonNames = read.csv(file=datataxonNameMatched.Abund, sep="\t", stringsAsFactors = F)
+
+print(paste0("Total number of taxa read: ", nrow(taxonNames)))
+
+## join the taxon fields to the abundance data
+Abundance.lf = left_join(Abundance.lf, taxonNames, by = c("scientificName"="ScientificName"))
+```
+
+

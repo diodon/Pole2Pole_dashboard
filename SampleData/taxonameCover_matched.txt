@@ -1,0 +1,27 @@
+ScientificName	AphiaID	Match type	LSID	ScientificName	AphiaID_accepted	ScientificName_accepted
+"Balanus glandula Darwin, 1854"	394848	exact	urn:lsid:marinespecies.org:taxname:394848	Balanus glandula	394848	Balanus glandula
+"Balanus glandula Darwin, 1855"	394848	exact	urn:lsid:marinespecies.org:taxname:394848	Balanus glandula	394848	Balanus glandula
+Brachidontes rodriguezii/Brachidontes purpuratus	138215	exact	urn:lsid:marinespecies.org:taxname:138215	Brachidontes	138215	Brachidontes
+Bryopsis australis Sonder	374257	exact	urn:lsid:marinespecies.org:taxname:374257	Bryopsis australis	374257	Bryopsis australis
+Ceramium sp.	143834	exact	urn:lsid:marinespecies.org:taxname:143834	Ceramium	143834	Ceramium
+Chaetomorpha sp.	143995	exact	urn:lsid:marinespecies.org:taxname:143995	Chaetomorpha	143995	Chaetomorpha
+Cladophora sp.	143996	exact	urn:lsid:marinespecies.org:taxname:143996	Cladophora	143996	Cladophora
+Codium sp.	143999	exact	urn:lsid:marinespecies.org:taxname:143999	Codium	143999	Codium
+Colpomenia sinuosa (Mertens ex Roth) Derbs et Solier	145857	exact	urn:lsid:marinespecies.org:taxname:145857	Colpomenia sinuosa	145857	Colpomenia sinuosa
+Corallina officinalis	145108	exact	urn:lsid:marinespecies.org:taxname:145108	Corallina officinalis	145108	Corallina officinalis
+Dictyota dichotoma	145367	exact	urn:lsid:marinespecies.org:taxname:145367	Dictyota dichotoma	145367	Dictyota dichotoma
+Ulva prolifera	234476	exact	urn:lsid:marinespecies.org:taxname:234476	Ulva prolifera	234476	Ulva prolifera
+Porifera sp1	558	exact	urn:lsid:marinespecies.org:taxname:558	Porifera	558	Porifera
+Leathesia sp.	143973	exact	urn:lsid:marinespecies.org:taxname:143973	Leathesia	143973	Leathesia
+Myriogloea sp.	146276	exact	urn:lsid:marinespecies.org:taxname:146276	Myriogloea	146276	Myriogloea
+Leiosolenus patagonicus	506057	exact	urn:lsid:marinespecies.org:taxname:506057	Leiosolenus patagonicus	506057	Leiosolenus patagonicus
+Parabunodactis imperfecta	290601	exact	urn:lsid:marinespecies.org:taxname:290601	Parabunodactis imperfecta	290601	Parabunodactis imperfecta
+Phaeophyceae	830	exact	urn:lsid:marinespecies.org:taxname:830	Phaeophyceae	830	Phaeophyceae
+Phaeophyceae	830	exact	urn:lsid:marinespecies.org:taxname:830	Phaeophyceae	830	Phaeophyceae
+Polysiphonia sp.	143853	exact	urn:lsid:marinespecies.org:taxname:143853	Polysiphonia	143853	Polysiphonia
+Ralfsia sp.	143985	exact	urn:lsid:marinespecies.org:taxname:143985	Ralfsia	143985	Ralfsia
+Corallinophycidae	368687	exact	urn:lsid:marinespecies.org:taxname:368687	Corallinophycidae	368687	Corallinophycidae
+Scytosiphon sp.	144259	exact	urn:lsid:marinespecies.org:taxname:144259	Scytosiphon	144259	Scytosiphon
+Polychaeta	883	exact	urn:lsid:marinespecies.org:taxname:883	Polychaeta	883	Polychaeta
+Ulva sp.	144296	exact	urn:lsid:marinespecies.org:taxname:144296	Ulva	144296	Ulva
+Undaria pinnatifida	145721	exact	urn:lsid:marinespecies.org:taxname:145721	Undaria pinnatifida	145721	Undaria pinnatifida

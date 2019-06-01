@@ -1,0 +1,258 @@
+---
+title: "P2P Sandy Beach Biodiversity Explorer"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(reshape2)
+library(leaflet)
+library(ggplot2)
+library(vegan)
+library(plotly)
+library(lubridate)
+library(dplyr)
+
+library(RColorBrewer)
+palette(brewer.pal(8, "Set2"))
+
+
+```
+
+```{r dataread}
+countryDir = "MEX"
+
+baseDataDir = paste0("../data/beach/", countryDir, "/")
+siteDF = read_csv(file = paste0(baseDataDir, countryDir, "_beach_siteDF.csv"))
+Occurrence = read_csv(file = paste0(baseDataDir, countryDir, "_beach_occurrence.csv"))
+
+## reorder strata factor
+##Occurrence$strata = factor(Occurrence$strata, levels = c("infralittoral", "mesolittoral", "supralittoral"))
+
+
+```
+
+
+General Information
+======================================================================
+
+Column
+-----------------------------------------------------------------------
+
+### Locality: `r siteDF$locality[1]` 
+
+```{r map}
+## get lat lon
+siteCoords = siteDF %>% dplyr::group_by(locality, site, strata) %>% 
+  dplyr::summarise(lng = mean(Longitude, na.rm=T), 
+            lat = mean(Latitude, na.rm=T))
+## get total abund and cover
+siteAbund = Occurrence %>% dplyr::filter(!is.na(AphiaID))  %>% 
+  dplyr::group_by(locality, site, strata) %>% 
+  dplyr::summarise(sumAbund = sum(abundance, na.rm=T), 
+            richness = n())
+
+## add abund and cover to coords
+siteCoords = full_join(siteCoords, siteAbund)
+
+## create a color palette
+pal <- colorFactor(brewer.pal(3, "Set2"), domain = c("infralittoral", "mesolittoral", "supralittoral"))
+
+## make leaflet map
+leaflet(siteCoords) %>% addTiles() %>% 
+  addCircleMarkers(label = ~paste0(site, "-", strata, " / N Taxa: ", richness), 
+                   radius = ~100 * richness/sum(richness) + 4,
+                   color = ~pal(strata), 
+                   fillOpacity = 0.8,
+                   stroke = F,
+                   clusterOptions = markerClusterOptions()) %>% 
+  addMiniMap(toggleDisplay = T)
+
+```
+
+
+### Number of taxa per site and stratum
+
+```{r taxasite}
+taxaquadrat = Occurrence %>%  
+  dplyr::group_by(locality, strata, Transect) %>% 
+  dplyr::summarise(taxa.n = n())
+
+##taxaquadrat$strata = factor(taxaquadrat$strata, levels = c("infralittoral", "mesolittoral", "supralittoral"))
+
+pp = ggplot(taxaquadrat, aes(strata, taxa.n, fill=strata))
+pp = pp + geom_boxplot() + ylab("Number of taxa per sample") + 
+  facet_grid(~locality) + 
+  theme_bw(base_size = 9) + theme(legend.position = "none")
+
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+
+```
+
+### Abundance of taxa per site and stratum
+
+```{r taxaabund}
+
+pp = ggplot(Occurrence, aes(strata, log10(abundance), group=strata, fill=strata))
+pp = pp + geom_boxplot() + ylab("Log Abundance of all taxa per sample") + 
+  facet_grid(~locality) + 
+  theme_bw(base_size = 9) + theme(legend.position = "none")
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
+Column
+-----------------------------------------------------------------------
+
+
+
+### taxonomic rank distribution
+
+```{r taxonrank}
+library(worms)
+scNames = unique(Occurrence$AphiaID)
+scNames = scNames[!is.na(scNames)]
+
+## get taxon rank from WoRMS
+scNames.rank = wormsbyid(x = scNames, verbose = F)
+
+## summarise the results
+taxranks = as.data.frame(table(scNames.rank$rank))
+
+## make a donut
+p = taxranks %>% plot_ly(labels = ~Var1, values=~Freq) %>% 
+  add_pie(hole=0.6) %>% 
+  layout(title = ~paste0("Total number of Taxa: ", length(scNames))) 
+
+plotly::config(p,displayModeBar = F) 
+
+
+
+```
+
+
+### Species frequency
+
+```{r}
+taxafreq = Occurrence %>% dplyr::filter(!is.na(AphiaID)) %>% 
+  dplyr::group_by(locality, strata, ScientificName_accepted) %>% 
+  dplyr::summarise(sppfreq = n()) %>% 
+  dplyr::arrange(sppfreq) %>% 
+  dplyr::mutate(sppacum = cumsum(sppfreq))
+
+pp = ggplot(taxafreq, aes(ScientificName_accepted, sppfreq, fill=strata))
+pp = pp + geom_bar(stat="identity") + coord_flip() + facet_grid(~locality) + 
+  theme_bw(base_size = 9) + xlab("") + ylab("number of quadrats present")
+
+ggplotly(pp) %>% plotly::config(displayModeBar = F) 
+
+```
+
+
+### Taxa list: number of quadrats where found 
+
+```{r taxalist}
+spRanks = scNames.rank[,c("AphiaID", "rank")]
+
+## add taxon rank to occurrence table
+Occurrence = full_join(Occurrence, spRanks)
+
+taxaTable = Occurrence %>% 
+  dplyr::group_by(AphiaID) %>% dplyr::filter(!is.na(AphiaID)) %>% 
+  dplyr::summarise(Taxon = unique(ScientificName_accepted), 
+            rank = unique(rank), 
+            Infra = sum(strata=="Infralittoral", na.rm=T), 
+            Meso = sum(strata=="mesolittoral", na.rm=T), 
+            Supra = sum(strata=="supralittoral", na.rm=T))
+
+knitr::kable(taxaTable)
+
+```
+
+
+Indicators
+=======================================================
+
+
+
+Row
+---------------------------------------------------------------
+
+### Cluster by Sites
+
+```{r}
+library(vegan)
+
+## summarise per site+strata
+OccurrenceSite  = Occurrence %>% dplyr::filter(!is.na(AphiaID)) %>% 
+  dplyr::group_by(locality, strata, AphiaID) %>% 
+  dplyr::summarise(n = n())
+
+
+## cast the div data
+ecoMat = dcast(locality+strata~AphiaID, data=OccurrenceSite, sum)
+
+
+ecoMat.dist = vegdist(ecoMat[,c(-1,-2)], method = "bray")
+plot(hclust(ecoMat.dist), hang=-1, labels = paste0(ecoMat$locality, "-", ecoMat$strata), ylab="B-C Distance", main="", xlab="", sub="", cex=0.7)
+```
+
+
+Row 
+----------------------------------------------------------------
+
+
+### Species accumulation curves
+
+```{r, fig.width=12}
+
+## get strat names
+strataNames = unique(Occurrence$strata)
+
+## empty DF for results
+sppAccum = data.frame(locality = character(),
+                      strata = character(),
+                      ncuad = numeric(),
+                      richness = numeric(), 
+                      sd = numeric())
+
+## loop by strata
+for (i in 1:length(strataNames)){
+  
+  ## filter by strata
+  Occurrence.strata = Occurrence %>% filter(strata==strataNames[i], !is.na(AphiaID))
+  
+  ## do it by site
+  siteNames = unique(Occurrence.strata$locality)
+  
+    
+  for (j in 1:length(siteNames)){
+    ecoMat = dcast(eventID~AphiaID, data=subset(Occurrence.strata, locality==siteNames[j]), 
+                   value.var = "AphiaID", length)
+    sppcurve = specaccum(ecoMat[,-1], method = "random")
+    sppAccum = rbind(sppAccum, 
+                     data.frame(locality = rep(siteNames[j], length(sppcurve$sites)),
+                                strata = rep(strataNames[i], length(sppcurve$sites)),
+                                ncuad = sppcurve$sites, 
+                                richness = sppcurve$richness,
+                                sd = sppcurve$sd))
+  }
+}
+
+## make the plot
+pp = ggplot(sppAccum, aes(ncuad, richness, colour=locality, fill=locality))
+pp + ## geom_ribbon(aes(ymin=richness-sd, ymax=richness+sd), alpha=0.3) + 
+  geom_line() + 
+  geom_point() + 
+  theme_bw(base_size = 10) + xlab("Number of samples") + ylab("Accumulated number of Spp") + 
+  facet_grid(~strata)
+
+```
+
