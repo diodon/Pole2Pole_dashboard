@@ -31,6 +31,7 @@ This guide will help you to publish your data to OBIS and GBIF, and by doing thi
 This is an easy process that could be accomplished under 30 minutes. 
 To publish your data you need to go through THREE easy steps:
 
+
 1. **Build your metadata**. Data without the metadata is simply useless. In this step you will enter the description of the project, sampling methods, collaborators, funding agencies, etc. This is important as you want your data set, collaborators and institution acknowledge correctly. You will dedicate most of your time on this step.
 2. **Match your data with Darwin Core (DwC) schema**. Since your data should already be formatted according to DwC terms, this is likely the easiest and quickest step. Just upload your files and review the matches.
 3. **Publish your data**. As easy as two clicks!
@@ -44,14 +45,14 @@ Let's go step by step:
 
 
 
-# 1. Build your metadata
+# Build your metadata
 
 As it was mentioned, this step is as important as the collection of the data itself. 
-You will fill the metadata section of the IPT installation of the MBON project.
+You will fill the metadata section on the IPT installation of the MBON project.
 
 1. Login into the [MBON IPT instalation](http://ipt.iobis.org/mbon) using the credentials we have set for you
 
-NOTE: Your user name is your email address
+NOTE: Your user name is your email address. If you don remember your password, just let us know!
 
 2. You need to create a **new resource** (this is how IPT calls the data sets). Go to the **Manage Resources** tab and at the very bottom fill the fields of the  **Create new Resource** section.
   + Name your resource. It has to be a short name with no spaces or special characters. Don't worry too much as we will change the name to a proper one later.
@@ -203,7 +204,7 @@ With that you have finished the description of your data set. Remember that more
 
 
 
-# 2. Match your data in the IPT
+# Match your data in the IPT
 
 For that step, the hard work is already done!
 The scripts we have used to read the Excel data tables and transform it into something more practical to analyze also produced a set of files ready to be uploaded to the [MBON IPT](http://ipt.iobis.org/mbon).
@@ -230,7 +231,7 @@ NOTE: if you have several localities as separated files and want to publish all 
   
 
 
-# 3. Publish your data
+# Publish your data
 
 Once the metadata has been completed and your data matched with the DwC terms of the core and extensions, you are ready to publish your data. 
 
