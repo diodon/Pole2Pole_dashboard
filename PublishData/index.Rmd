@@ -226,7 +226,7 @@ NOTE: if you have several localities as separated files and want to publish all 
 
 5. Review the matching: In this step you will verify that the fields of your data table match with the DwC terms.
   + Click on the **Edit** button at the right of the **Event file**. You will be directed to the page of the Event core fields. Verify that the names of the fields of your table correspond with the names of the Event core. Normally everything is correctly matched so you only need to click **Save**. Once saved, click **Back**
-  + Click on the **Edit** button at the right of the occurrence file. You will be directed to the page of the occurrence extension. As in the previous step, everything is correctly matched, but you need to change the match of the `scientificName` field. In this case, we will use `scientificName_accepted` as this is the one we extracted from WoRMS. Locate the `scientificName` field down to the Taxonomic section and using the pull down select the `scientificName_accepted` from your file.
+  + Click on the **Edit** button at the right of the occurrence file. You will be directed to the page of the occurrence extension. As in the previous step, everything is correctly matched. We even changed the `scientificName` field with `scientificName_accepted` as this is the one we extracted from WoRMS. Again, everything should be correctly matched, so you only need to click **Save**. Once saved, click **Back** 
   
   
 
