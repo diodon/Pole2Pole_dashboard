@@ -24,7 +24,7 @@
 <meta name="author" content="E. Klein" />
 
 
-<meta name="date" content="2019-06-03" />
+<meta name="date" content="2019-08-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,41 +50,67 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 </head>
@@ -106,7 +132,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.3" data-path=""><a href="#taxonomic-coverage"><i class="fa fa-check"></i><b>2.3</b> Taxonomic Coverage</a></li>
 <li class="chapter" data-level="2.4" data-path=""><a href="#temporal-coverage"><i class="fa fa-check"></i><b>2.4</b> Temporal coverage</a></li>
 <li class="chapter" data-level="2.5" data-path=""><a href="#keywords"><i class="fa fa-check"></i><b>2.5</b> Keywords</a></li>
-<li class="chapter" data-level="2.6" data-path=""><a href="#associted-parties"><i class="fa fa-check"></i><b>2.6</b> Associted Parties</a></li>
+<li class="chapter" data-level="2.6" data-path=""><a href="#associated-parties"><i class="fa fa-check"></i><b>2.6</b> Associated Parties</a></li>
 <li class="chapter" data-level="2.7" data-path=""><a href="#project-data"><i class="fa fa-check"></i><b>2.7</b> Project Data</a></li>
 <li class="chapter" data-level="2.8" data-path=""><a href="#sampling-methods."><i class="fa fa-check"></i><b>2.8</b> Sampling methods.</a></li>
 <li class="chapter" data-level="2.9" data-path=""><a href="#citation"><i class="fa fa-check"></i><b>2.9</b> Citation</a></li>
@@ -137,16 +163,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1 class="title">MBON Pole to Pole of the Americas</h1>
 <h2 class="subtitle"><em>HOW TO upload and publish your data in OBIS and GBIF</em></h2>
 <p class="author"><em>E. Klein</em></p>
-<p class="date"><em>2019-06-03</em></p>
+<p class="date"><em>2019-08-16</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>This guide will help you to publish your data to OBIS and GBIF, and by doing this, obtain a DOI for your collection.</p>
-<p>This is an easy process that could be accomplished under 30 minutes. To publish your data you need to go through THREE easy steps:</p>
+<p>This is an easy process that could be accomplished under 30 minutes.
+To publish your data you need to go through THREE easy steps:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Build your metadata</strong>. Data without the metadata is simply useless. In this step you will enter the description of the project, sampling methods, collaborators, funding agencies, etc. This is important as you want your data set, collaborators and institution acknowledge correctly. You will dedicate most of your time on this step.</li>
 <li><strong>Match your data with Darwin Core (DwC) schema</strong>. Since your data should already be formatted according to DwC terms, this is likely the easiest and quickest step. Just upload your files and review the matches.</li>
-<li><strong>Publish your data</strong>. As easy as two clicks!</li>
+<li><strong>Publish your data</strong>. As easy as three clicks!</li>
 </ol>
 <p>At the last workshop, we agree that all data sets will be published in <a href="http://obis.org">OBIS</a> and <a href="http://gbif.org">GBIF</a>, and after the data is there, we will produce two data papers, one for the Sandy Beach data and other for the Rocky shore data.</p>
 <p><strong>If you don’t have time or think that you will not be able to publish your data, just let us know. We can help you!</strong></p>
@@ -154,7 +181,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="build-your-metadata" class="section level1">
 <h1><span class="header-section-number">2</span> Build your metadata</h1>
-<p>As it was mentioned, this step is as important as the collection of the data itself. You will fill the metadata section on the IPT installation of the MBON project.</p>
+<p>As it was mentioned, this step is as important as the collection of the data itself.
+You will fill the metadata section on the IPT installation of the MBON project.</p>
 <ol style="list-style-type: decimal">
 <li>Login into the <a href="http://ipt.iobis.org/mbon">MBON IPT instalation</a> using the credentials we have set for you</li>
 </ol>
@@ -185,7 +213,7 @@ NOTE: During the creation/edition process the data set (<em>the resource</em>) w
 <li><p>Modify the title of your resource. For the project your must use <strong>MBON POLE TO POLE: SANDY BEACH BIODIVERSITY OF….</strong> replacing SANDY BEACH for ROCKY SHORE if it necessary and complete the line with your locality, e.g. <strong>MBON POLE TO POLE: SANDY BEACH BIODIVERSITY OF PLAYA DEL CARMEN</strong>. All in <strong>CAPITAL</strong> letters.</p></li>
 <li><p>Publishing organization select <strong>Caribbean OBIS Node</strong></p></li>
 <li><p>Update frequency, select <strong>as needed</strong></p></li>
-<li><p>Licence type: select <strong>Cretive COmmons Attribution (CC-BY) 4.0</strong>. This means that the user must attribute the data to the owner.</p></li>
+<li><p>Licence type: select <strong>Creative Commons Attribution (CC-BY) 4.0</strong>. This means that the user must attribute the data to the owner.</p></li>
 <li><p>Description. Add a new paragraph with the following text:</p></li>
 </ol>
 <pre><code>The MBON Pole to Pole effort seeks to develop a framework for the collection, use and sharing of marine biodiversity data in a coordinated, standardized manner leveraging on existing infrastructure managed by the Global Ocean Observing System (GOOS; IOC-UNESCO), the GEO Biodiversity Observation Network (GEO BON), and the Ocean Biogeographic Information System (OBIS). The MBON Pole to Pole aims to become a key resource for decision-making and management of living resource across countries in the Americas for reporting requirements under the Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES), Aichi Targets of the Convention of Biological Diversity (CBD), and the UN 2030 Agenda for Sustainable Development Goals (SDGs).</code></pre>
@@ -202,16 +230,17 @@ NOTE: During the creation/edition process the data set (<em>the resource</em>) w
 </div>
 <div id="taxonomic-coverage" class="section level2">
 <h2><span class="header-section-number">2.3</span> Taxonomic Coverage</h2>
-<p>Here you need to input all the scientific names of organisms found at your study site. You can easily extract this from the occurrence file of your site from the DataAnalysisFile folder in the projects google drive.</p>
+<p>Here you need to input all the scientific names of organisms found at your study site.
+You can easily extract this from the occurrence file of your site from the DataAnalysisFile folder in the projects Google drive.</p>
 <p>Here is an example of the list of taxa from Puerto Madryn rocky shores sites:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Occurrence =<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;ARGENTINA_PUERTOMADRYN_PUNTAESTE_dashboard_occurrence.csv&quot;</span>, <span class="dt">progress =</span> F)
+<pre class="sourceCode r"><code class="sourceCode r">Occurrence =<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;ARGENTINA_PUERTOMADRYN_PUNTAESTE_dashboard_occurrence.csv&quot;</span>, <span class="dt">progress =</span> F)
 sppList =<span class="st"> </span><span class="kw">unique</span>(Occurrence<span class="op">$</span>ScientificName_accepted)
-## remove NAs
+<span class="co">## remove NAs</span>
 sppList =<span class="st"> </span>sppList[<span class="op">!</span><span class="kw">is.na</span>(sppList)]
 
-## Write the names to a text file
+<span class="co">## Write the names to a text file</span>
 <span class="kw">writeLines</span>(<span class="dt">con=</span><span class="st">&quot;sppList.txt&quot;</span>, sppList)
-<span class="kw">print</span>(sppList)</code></pre></div>
+<span class="kw">print</span>(sppList)</code></pre>
 <pre><code>##  [1] &quot;Brachidontes&quot;                   &quot;Ulva prolifera&quot;                
 ##  [3] &quot;Siphonaria lessonii&quot;            &quot;Balanus glandula&quot;              
 ##  [5] &quot;Mytilus platensis&quot;              &quot;Ulva&quot;                          
@@ -229,7 +258,11 @@ sppList =<span class="st"> </span>sppList[<span class="op">!</span><span class="
 ## [29] &quot;Plaxiphora (Plaxiphora) aurata&quot; &quot;Leathesia&quot;                     
 ## [31] &quot;Fissurella radiosa tixierae&quot;    &quot;Codium&quot;                        
 ## [33] &quot;Eulalia clavigera&quot;</code></pre>
-<p>Once you have your taxon list, click on <strong>add new taxonomic coverage</strong>, and <strong>add several taxa</strong>. You can paste here the list of your species. Once copied you will see one line per taxon. You could also add the taxonomic range of the name selecting it from the pull down beside each name. You should have something similar to this:</p>
+<p>Once you have your taxon list, click on <strong>add new taxonomic coverage</strong>, and <strong>add several taxa</strong>.
+You can paste here the list of your species.
+Once copied you will see one line per taxon.
+You could also add the taxonomic range of the name selecting it from the pull down beside each name.
+You should have something similar to this:</p>
 <div class="figure">
 <img src="images/ipt_taxrange.png" alt="Taxonomic Range" />
 <p class="caption">Taxonomic Range</p>
@@ -246,8 +279,8 @@ sppList =<span class="st"> </span>sppList[<span class="op">!</span><span class="
 <p><strong>MBON, Pole to Pole</strong></p>
 <p>Click <strong>Save</strong></p>
 </div>
-<div id="associted-parties" class="section level2">
-<h2><span class="header-section-number">2.6</span> Associted Parties</h2>
+<div id="associated-parties" class="section level2">
+<h2><span class="header-section-number">2.6</span> Associated Parties</h2>
 <p>Here you will enter the details of your organization, funding agencies, collaborators, etc. Please select carefully the role of your collaborators.</p>
 <p>Once finished, click <strong>Save</strong></p>
 </div>
@@ -286,15 +319,20 @@ sppList =<span class="st"> </span>sppList[<span class="op">!</span><span class="
 <div id="additional-metadata" class="section level2">
 <h2><span class="header-section-number">2.12</span> Additional Metadata</h2>
 <p>Please add in the section <strong>Additional Information</strong> the following lines:</p>
-<p><strong>MARINE DATA HARVESTED BY OBIS</strong> <strong>A MBON POLE TO POLE PROJECT DATA SET</strong></p>
+<p><strong>MARINE DATA HARVESTED BY OBIS</strong>
+<strong>A MBON POLE TO POLE PROJECT DATA SET</strong></p>
 <p>click <strong>Save</strong></p>
 <p>With that you have finished the description of your data set. Remember that more detail is always better. Also, you can modify your metadata later and the tinges will be reflected on the GBIF and OBIS sites.</p>
 </div>
 </div>
 <div id="match-your-data-in-the-ipt" class="section level1">
 <h1><span class="header-section-number">3</span> Match your data in the IPT</h1>
-<p>For that step, the hard work is already done! The scripts we have used to read the Excel data tables and transform it into something more practical to analyze also produced a set of files ready to be uploaded to the <a href="http://ipt.iobis.org/mbon">MBON IPT</a>.</p>
-<p>You will need <em>three</em> files for you locality that are in the Google drive folder <a href="https://drive.google.com/open?id=1aXDbVtRminFY8LvE6Tc2r0mh9B4JjHXy">00-DataCurated-&gt;IPTFiles</a>. As usual, the files from the sandy beaches are in a different folder that the ones from the rocky shores. The files have the name of your locality/site and the prefixes <code>\_ipt_event</code>, <code>\_ipt_occurrence</code> and <code>\_ipt_MoF</code>. Those files correspond to the EVENT-DATA schema of OBIS.</p>
+<p>For that step, the hard work is already done!
+The scripts we have used to read the Excel data tables and transform it into something more practical to analyze also produced a set of files ready to be uploaded to the <a href="http://ipt.iobis.org/mbon">MBON IPT</a>.</p>
+<p>You will need <em>three</em> files for you locality that are in the Google drive folder <a href="https://drive.google.com/open?id=1aXDbVtRminFY8LvE6Tc2r0mh9B4JjHXy">00-DataCurated-&gt;IPTFiles</a>.
+As usual, the files from the sandy beaches are in a different folder that the ones from the rocky shores.
+The files have the name of your locality/site and the prefixes <code>\_ipt_event</code>, <code>\_ipt_occurrence</code> and <code>\_ipt_MoF</code>.
+Those files correspond to the EVENT-DATA schema of OBIS.</p>
 <p>NOTE: if you have several localities as separated files and want to publish all as a single data set, we can help you to merge the data. Just let us know.</p>
 <ol style="list-style-type: decimal">
 <li><p>Go to the Google drive folder where the IPT files are and download to your computer the three IPT files for your locality.</p></li>
@@ -313,7 +351,8 @@ sppList =<span class="st"> </span>sppList[<span class="op">!</span><span class="
 <p>Once the metadata has been completed and your data matched with the DwC terms of the core and extensions, you are ready to publish your data.</p>
 <p>In the main page of your resource, first click <strong>PUBLISH</strong>. You will be asked to accept the GBIF terms.</p>
 <p>You can change the visibility to <strong>PUBLIC</strong> to make your data publicly available.</p>
-<p>Congratulations!!! Within few minutes your data will be in OBIS and GBIF. GBIF will provide you with a landing page with a DOI for your data.</p>
+<p>Congratulations!!! Within few minutes your data will be in OBIS.</p>
+<p>If you want also to publish your data in GBIF (recommended!) you only need to click in <strong>REGISTER</strong>. GBIF will provide you with a landing page with a DOI for your data.</p>
 <p>Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes.</p>
 <p>If you have questions or concerns about this process do not hesitate to contact us.</p>
 <p>Well done!!</p>

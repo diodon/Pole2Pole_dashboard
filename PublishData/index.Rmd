@@ -34,7 +34,7 @@ To publish your data you need to go through THREE easy steps:
 
 1. **Build your metadata**. Data without the metadata is simply useless. In this step you will enter the description of the project, sampling methods, collaborators, funding agencies, etc. This is important as you want your data set, collaborators and institution acknowledge correctly. You will dedicate most of your time on this step.
 2. **Match your data with Darwin Core (DwC) schema**. Since your data should already be formatted according to DwC terms, this is likely the easiest and quickest step. Just upload your files and review the matches.
-3. **Publish your data**. As easy as two clicks!
+3. **Publish your data**. As easy as three clicks!
 
 At the last workshop, we agree that all data sets will be published in [OBIS](http://obis.org) and [GBIF](http://gbif.org), and after the data is there, we will produce two data papers, one for the Sandy Beach data and other for the Rocky shore data.
 
@@ -83,7 +83,7 @@ So click on `Edit` in the matadata section and begin to fill the information req
 
 3. Update frequency, select **as needed**
 
-4. Licence type: select **Cretive COmmons Attribution (CC-BY) 4.0**. This means that the user must attribute the data to the owner.
+4. Licence type: select **Creative Commons Attribution (CC-BY) 4.0**. This means that the user must attribute the data to the owner.
 
 5. Description. Add a new paragraph with the following text: 
 
@@ -107,7 +107,7 @@ You also need to add a description of your locality, e.g. Sandy beach of Playa d
 ## Taxonomic Coverage
 
 Here you need to input all the scientific names of organisms found at your study site. 
-You can easily extract this from the occurrence file of your site from the DataAnalysisFile folder in the projects google drive.
+You can easily extract this from the occurrence file of your site from the DataAnalysisFile folder in the projects Google drive.
 
 Here is an example of the list of taxa from Puerto Madryn rocky shores sites:
 
@@ -145,7 +145,7 @@ Add a list of the keywords. Please include the following:
 
 Click **Save**
 
-## Associted Parties
+## Associated Parties
 
 Here you will enter the details of your organization, funding agencies, collaborators, etc. Please select carefully the role of your collaborators.
 
@@ -239,7 +239,9 @@ In the main page of your resource, first click **PUBLISH**. You will be asked to
 
 You can change the visibility to **PUBLIC** to make your data publicly available.
 
-Congratulations!!! Within few minutes your data will be in OBIS and GBIF. GBIF will provide you with a landing page with a DOI for your data.
+Congratulations!!! Within few minutes your data will be in OBIS. 
+
+If you want also to publish your data in GBIF (recommended!) you only need to click in **REGISTER**. GBIF will provide you with a landing page with a DOI for your data.
 
 Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes.
 
