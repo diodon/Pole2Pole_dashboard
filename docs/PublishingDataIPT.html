@@ -24,7 +24,7 @@
 <meta name="author" content="E. Klein" />
 
 
-<meta name="date" content="2019-08-16" />
+<meta name="date" content="2019-08-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -163,7 +163,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 class="title">MBON Pole to Pole of the Americas</h1>
 <h2 class="subtitle"><em>HOW TO upload and publish your data in OBIS and GBIF</em></h2>
 <p class="author"><em>E. Klein</em></p>
-<p class="date"><em>2019-08-16</em></p>
+<p class="date"><em>2019-08-17</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
@@ -276,7 +276,7 @@ You should have something similar to this:</p>
 <div id="keywords" class="section level2">
 <h2><span class="header-section-number">2.5</span> Keywords</h2>
 <p>Add a list of the keywords. Please include the following:</p>
-<p><strong>MBON, Pole to Pole</strong></p>
+<pre><code>MBON, Pole to Pole, LOCALITY (e.g. Montemar Reñaca, Valparaiso Bay, central Chile), rocky shores or sandy beach, intertidal zone, coastal biodiversity</code></pre>
 <p>Click <strong>Save</strong></p>
 </div>
 <div id="associated-parties" class="section level2">
@@ -289,22 +289,50 @@ You should have something similar to this:</p>
 <ol style="list-style-type: decimal">
 <li><p>Title. Use the same name you used in the project title above.</p></li>
 <li><p>Description. Copy the same description you used above.</p></li>
-<li><p>Funding. Add the organization(s) that provide support for the sampling.</p></li>
-<li><p>Study area Description. Input a general description of you sampling area here. E.g. Playa del Carmen is a sandy beach of xx Km long with tidal range of xx m. the mean temperature is xx C and presents seasonal upwellings during the first months of the year. There is an important coastal development, mostly for tourism and during high season we could expect hundred of people using the beach…. something like this.</p></li>
-<li><p>Design description: Copy the sampling design from the official methods for the corresponding sandy beach or rocky shore habitats.</p></li>
-<li><p>Project personnel: Here you will enter your collaborators and their specific role in the project. They all must be included in the citation of the data set. Carefully select the role of each of the collaborators.</p></li>
+<li><p>Funding. Add the organization(s) that provide support for the sampling, and NASA as a funder for the global project:</p></li>
 </ol>
-<p>Here you will enter the details of the project.</p>
+<pre><code>The sampling, materials and personnel were financed by [YOUR INSTITUTION OR ANY OTHER INSTITUTION]. The Pole to Pole project is supported by the National Aeronautics and Space Administration (NASA) grant 80NSSC18K0318, ”Laying the foundations of the Pole-to-Pole Marine Biodiversity Observation Network (MBON) of the Americas”, and co-sponsored by AmeriGEO.</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Study area Description. Input a general description of you sampling area here. E.g. Playa del Carmen is a sandy beach of xx Km long with tidal range of xx m. the mean temperature is xx C and presents seasonal upwellings during the first months of the year. There is an important coastal development, mostly for tourism and during high season we could expect hundred of people using the beach…. something like this. Example from Chile:</li>
+</ol>
+<pre><code>The study area belonging to Marine Protected Area Montemar within the premises of the Marine Science Department, Universidad de Valparaiso. The area is a semi-exposed rocky shore with bed rocks with some level of anthropogenic impact. Seasonality and upwelling could be considered as main drivers for benthic communities.</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Design description: Copy the sampling design from the official methods for the corresponding sandy beach or rocky shore habitats. Please add the reference to the methods:</li>
+</ol>
+<pre><code>MBON Pole to Pole protocol for rocky intertidal areas (2018) available at https://marinebon.github.io/p2p/methods_field_protocols.html.
+</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li>Project personnel: Here you will enter your collaborators and their specific role in the project. They all must be included in the citation of the data set. Carefully select the role of each of the collaborators.</li>
+</ol>
 </div>
 <div id="sampling-methods." class="section level2">
 <h2><span class="header-section-number">2.8</span> Sampling methods.</h2>
-<p>Input the information from the manual of the standard methods for the project.</p>
+<p>Here you will enter the details of the project.</p>
+<p>Study Extent:</p>
+<p>Summarize the area where the survey was done: Example from Colombia:</p>
+<pre><code>This study was done in three sites (La Máncora, Playa Verde, and La Ventana) of one location (Gorgona Island) during one time (October 2018).</code></pre>
+<p>Sampling description:</p>
+<p>Input the information from the manual of the standard methods for the project depending if rocky or sandy beach sampling. or rocky shores add:</p>
+<pre><code>Sampling is organized following a stratified design, which includes LOCATIONS, SITES, and STRATA. Note that LOCATIONS are separated by 30 – 100’s of kilometers. For each LOCATION on this case it was only one. Those SITES will be separated by units of kilometers (maximum 5 km). The selected site was divided in THREE STRATA (tidal levels) parallel to the coastline using the almost universal biologically-based characteristics of rocky shores of high-, mid- and low zones. In each stratum 10 QUADRATS were sampled, pictures from relevant animals were taken and animals and macroalgae samples were considered for further taxonomic identifications.
+
+In the 10 QUADRATS within each stratum (tidal level), slow moving animals are counted and the percentage cover of space occupied by invertebrates and algae. The latter includes those organisms that cover a considerable fraction of the rock surface and that are too many to be counted or cannot be easily separated into individuals; e.g., barnacles, mussels, some colonial invertebrates, including zoanthids and ascidians, algal turfs or macroalgae. Organisms adhering directly to the rock surface and moving across it are considered the “primary layer”. If canopy-forming organisms such as macroalgae are present, then these
+are moved aside for counts, cover and photographs in order to effectively quantify the primary layer. The composition of the canopy- the secondary layer- should also be conducted.</code></pre>
+<p>For sandy beaches:</p>
+<pre><code>Three linear transects, spaced more than 3 meters and less than 10 meters apart. The distance of the upper limit of the transects on each site was determined from a fixed reference point, starting immediately below the high tide level(below the drift line) to the lower level of the swash. Sampling were done on three to six equidistant points along the transects. Sampler was a corer of 15 centimeters in diameter, reaching up to 25 centimeters in the sediment.</code></pre>
+<p>Quality control</p>
+<p>Please add the following text:</p>
+<pre><code>Taxonomic validity was verified using the World Register of Marine Species (WoRMS; www.marinespecies.org) and the Ocean Biogeographic Information System (OBIS; https://obis.org/)</code></pre>
+<p>Step Description:</p>
+<pre><code>Samples were processed following the rocky shore intertidal protocol developed during the Marine Biodiversity Workshop: from the Sea to the Cloud, at Praia do Segredo, São Sebastião, Brasil. August 6-10, 2018.</code></pre>
 <p>Click <strong>Save</strong></p>
 </div>
 <div id="citation" class="section level2">
 <h2><span class="header-section-number">2.9</span> Citation</h2>
-<p>This is how the data set will be cited. Click on the <em>Autogeneration</em> to turn it on. Review the citation! If you think that something or someone is missing, go back to the corresponding section and make the modifications.</p>
+<p>This is how the data set will be cited. Click on the <em>Autogeneration</em> to turn it on. Review the citation! The names that you entered in the <em>Resource Creators</em> section in Basic Metadata will appear here as authors. If you think that something or someone is missing, go back to the corresponding section and make the modifications. You can always edit this box to provide a more precise citation if you think it is needed.</p>
 <p>If there is any relevant bibliographic reference associated with your data set you can add it in this section.</p>
+<p>Resource Homepage</p>
+<p>Please add the MBON web page. If your data or your local project has another webp page, you can add it here as well.</p>
+<pre><code>https://marinebon.github.io/p2p/index.html</code></pre>
 <p>Once satisfied, click <strong>Save</strong></p>
 </div>
 <div id="collection-data" class="section level2">
@@ -335,26 +363,68 @@ The files have the name of your locality/site and the prefixes <code>\_ipt_event
 Those files correspond to the EVENT-DATA schema of OBIS.</p>
 <p>NOTE: if you have several localities as separated files and want to publish all as a single data set, we can help you to merge the data. Just let us know.</p>
 <ol style="list-style-type: decimal">
-<li><p>Go to the Google drive folder where the IPT files are and download to your computer the three IPT files for your locality.</p></li>
+<li>Go to the Google drive folder where the IPT files are and download to your computer the three IPT files for your locality.</li>
+</ol>
+<p><strong>IMPORTANT NOTE:</strong> If you want to open the your data files in your computing using excel, please note that excel will change the format of the <code>eventDATE</code> variable and if your system is in Spanish, it will also change de field separator to semi-colon and the decimal point to comma. The IPT will not recognize those changes and you won’t be able to match your data. If you open your file in excel, <strong>PLEASE DO NOT SAVE IT AGAIN!</strong> unless you take care of those details.</p>
+<ol start="2" style="list-style-type: decimal">
 <li><p>In the IPT go to the tab <strong>Manage Resources</strong> and select your newly created data set. This will direct you to your resource main page, if you are not already there.</p></li>
-<li><p>Upload your files: Go to the section <strong>upload files</strong> and select your files one by one. There will be a page confirming the number of records read and other details that you need to acknowledge. Once your three files are uploaded you will see them in the right side panel</p></li>
-<li><p>Match your files with the event core and occurrence and MoF extensions</p></li>
-<li>Review the matching: In this step you will verify that the fields of your data table match with the DwC terms.</li>
+<li><p>Upload your files: Go to the section <strong>Source Data</strong> and select your files one by one. There will be a page confirming the number of records read and other details that you need to acknowledge. Once your three files are uploaded you will see them in the right side panel. This is an example from Colombia:</p></li>
+</ol>
+<div class="figure">
+<img src="images/colombiaDataFiles_example.png" alt="Rocky shore files from Colombia" />
+<p class="caption">Rocky shore files from Colombia</p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>Match your files with the event core and occurrence and MoF extensions.</li>
+</ol>
+<p><strong>IMPORTANT NOTE:</strong>. You must select first <strong>Darwing Core Event</strong>. If not, the required extensions might not be available in the next step.</p>
+<div class="figure">
+<img src="images/DwCextensions.png" alt="Darwin core extensionbox" />
+<p class="caption">Darwin core extensionbox</p>
+</div>
+<p>After each of the core/extension selected, you will be prompted or a file to match:</p>
+<ul>
+<li>Core Event –&gt; SITE_ipt_event.csv</li>
+<li>Darwin Core Occurrence –&gt; SITE_ipt_occurrence.csv</li>
+<li>Extended Measurements or Facts –&gt; SITE_ipt_mof.csv</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Review the matching: In each of the components of the DwC you will verify that the fields of your data table match with the DwC terms. You can also review the matching as follow:</li>
 </ol>
 <ul>
-<li>Click on the <strong>Edit</strong> button at the right of the <strong>Event file</strong>. You will be directed to the page of the Event core fields. Verify that the names of the fields of your table correspond with the names of the Event core. Normally everything is correctly matched so you only need to click <strong>Save</strong>. Once saved, click <strong>Back</strong></li>
-<li>Click on the <strong>Edit</strong> button at the right of the occurrence file. You will be directed to the page of the occurrence extension. As in the previous step, everything is correctly matched, but you need to change the match of the <code>scientificName</code> field. In this case, we will use <code>scientificName_accepted</code> as this is the one we extracted from WoRMS. Locate the <code>scientificName</code> field down to the Taxonomic section and using the pull down select the <code>scientificName_accepted</code> from your file.</li>
+<li>Click on the <strong>Edit</strong> button at the right of the <strong>Event file</strong>. You will be directed to the page of the Event core fields. Verify that the names of the fields of your table correspond with the names of the Event core. Normally everything is correctly matched so you only need to click <strong>Save</strong>. Once saved, click <strong>Back</strong>.</li>
+<li>Click on the <strong>Edit</strong> button at the right of the occurrence file. You will be directed to the page of the occurrence extension. As in the previous step, everything is correctly matched. We even changed the <code>scientificName</code> field with <code>scientificName_accepted</code> as this is the one we extracted from WoRMS. Again, everything should be correctly matched, so you only need to click <strong>Save</strong>. Once saved, click <strong>Back</strong></li>
+<li>Click on the <strong>Edit</strong> button at the right of the mof file. Again, everything should match well.</li>
 </ul>
+<p>Now your data is in the IPT with the correct Darwin Core format. You’re ready to publish:</p>
 </div>
 <div id="publish-your-data" class="section level1">
 <h1><span class="header-section-number">4</span> Publish your data</h1>
-<p>Once the metadata has been completed and your data matched with the DwC terms of the core and extensions, you are ready to publish your data.</p>
-<p>In the main page of your resource, first click <strong>PUBLISH</strong>. You will be asked to accept the GBIF terms.</p>
-<p>You can change the visibility to <strong>PUBLIC</strong> to make your data publicly available.</p>
+<p>Once the metadata has been completed and your data matched with the DwC terms of the core and extensions, you are ready to publish your data. You need to follow three easy steps:</p>
+<ul>
+<li>Change the visibility to <strong>PUBLIC</strong> to make your data publicly available. Do nothing with the Auto-publishing option:</li>
+</ul>
+<div class="figure">
+<img src="images/publish_public.png" alt="public button" />
+<p class="caption">public button</p>
+</div>
+<ul>
+<li>Publish your data clicking on the Publish button. This action will make your data o be harvested by OBIS in the next few minutes.</li>
+</ul>
+<div class="figure">
+<img src="images/publish_publish.png" alt="publish button" />
+<p class="caption">publish button</p>
+</div>
+<ul>
+<li>Register your data set to GBIF, clicking on Register in the visibility panel. After acceptingt GBIF terms, your data set will be collected by GBIF in the next few minutes. GBIF will provide you with a landing page with a DOI for your data.</li>
+</ul>
+<div class="figure">
+<img src="images/publish_register.png" alt="register button" />
+<p class="caption">register button</p>
+</div>
 <p>Congratulations!!! Within few minutes your data will be in OBIS.</p>
-<p>If you want also to publish your data in GBIF (recommended!) you only need to click in <strong>REGISTER</strong>. GBIF will provide you with a landing page with a DOI for your data.</p>
-<p>Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes.</p>
-<p>If you have questions or concerns about this process do not hesitate to contact us.</p>
+<p>Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes afte ryou click the Publish button again.</p>
+<p>Finally, if you have questions or concerns about this process do not hesitate to contact us.</p>
 <p>Well done!!</p>
 
 </div>
