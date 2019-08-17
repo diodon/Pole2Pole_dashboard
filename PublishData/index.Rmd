@@ -322,7 +322,7 @@ Once the metadata has been completed and your data matched with the DwC terms of
 
 
 
- + Publish your data clicking on the Publish button. This action will make your data o be harvested by OBIS in the next few minutes.
+ + Publish your data clicking on the Publish button. This action will make your data to be harvested by OBIS in the next few minutes.
 
 ![publish button](images/publish_publish.png)
 
@@ -331,7 +331,7 @@ Once the metadata has been completed and your data matched with the DwC terms of
 ![register button](images/publish_register.png)
 
 
-Congratulations!!! Within few minutes your data will be in OBIS. 
+Congratulations!!! Within few minutes your data will be in GBIF 
 
 
 Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes afte ryou click the Publish button again.
