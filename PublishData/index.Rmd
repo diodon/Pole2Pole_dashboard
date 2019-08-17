@@ -282,7 +282,7 @@ NOTE: if you have several localities as separated files and want to publish all 
 
 1. Go to the Google drive folder where the IPT files are and download to your computer the three IPT files for your locality. 
 
-**IMPORTANT NOTE:** If you want to open the your data files in your computing using excel, please note that excel will change the format of the `eventDATE` variable and if your system is in Spanish, it will also change de field separator to semi-colon and the decimal point to comma. The IPT will not recognize those changes and you won't be able to match your data. If you open your file in excel, **PLEASE DO NOT SAVE IT AGAIN!** unless you take care of those details.
+**IMPORTANT NOTE:** If you want to open the your data files in your computer using excel, please note that excel will almost certainly change the format of the `eventDATE` variable and if your system is in Spanish, it will also change de field separator to semi-colon and the decimal point to comma. The IPT will not recognize those changes and you won't be able to match your data. If you open your file in excel, **PLEASE DO NOT SAVE IT AGAIN!** unless you take care of those details.
 
 2. In the IPT go to the tab **Manage Resources** and select your newly created data set. This will direct you to your resource main page, if you are not already there. 
 
