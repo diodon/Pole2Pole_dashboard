@@ -323,18 +323,23 @@ Once the metadata has been completed and your data matched with the DwC terms of
 
 
  + Publish your data clicking on the Publish button. This action will make your data to be harvested by OBIS in the next few minutes.
+ 
+
 
 ![publish button](images/publish_publish.png)
+
+ Congratulations!!! You've just published your dataset in OBIS. Go to the [OBIS portal](http://obis.org), search by dataset and start typing MBON... your collection should appear along with the other MBON datasets. Click on your dataset and you will land in your data home page. Check the information about quality control ckecks performed automatically by OBIS. It is a good way to spot problems in your records. 
+
 
   + Register your data set to GBIF, clicking on Register in the visibility panel. After acceptingt GBIF terms, your data set will be collected by GBIF in the next few minutes. GBIF will provide you with a landing page with a DOI for your data.
 
 ![register button](images/publish_register.png)
 
 
-Congratulations!!! Within few minutes your data will be in GBIF 
+In few minutes your data will be in GBIF. 
 
 
-Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes afte ryou click the Publish button again.
+Remember that you can always update your data and metadata in the IPT and the changes will be reflected in both systems within minutes after you click the Publish button again.
 
 
 Finally, if you have questions or concerns about this process do not hesitate to contact us.
